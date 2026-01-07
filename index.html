@@ -32,7 +32,7 @@
             inset: 0;
             background: var(--bg-dark);
             z-index: 9999;
-            display: none; /* Управляется через JS */
+            display: none;
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(15px);
@@ -114,21 +114,22 @@
 
     <div class="container">
         <div class="games-list">
-            <div class="tile active" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
+            <div class="tile active" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
+            <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
             <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
             <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
             <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
         </div>
         <div class="info">
-            <h1 id="t">Hitman Absolution</h1>
-            <p id="d">Стелс-экшен про легендарного киллера Агента 47.</p>
-            <a id="l" href="https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar" class="download-btn">СКАЧАТЬ</a>
+            <h1 id="t">Ravenfield</h1>
+            <p id="d">Масштабный шутер с ботами и полной разрушаемостью.</p>
+            <a id="l" href="https://megadb.net/kw2j7hdqenvy" class="download-btn">СКАЧАТЬ</a>
         </div>
     </div>
 
     <script>
-        // ДАННЫЕ ИГР
         const gameData = {
+            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами и полной разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
             hitman: {t: "Hitman Absolution", d: "Стелс-экшен про легендарного киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
             ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
             brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
@@ -144,7 +145,6 @@
             el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        // ЛОГИКА ПОДПИСКИ С ПАМЯТЬЮ
         const translations = {
             ru: { title: "Привет!", desc: "Данный сайт разрабатывается одним человеком. <br>Пожалуйста, подпишись на мой телеграмм канал (обязательно).", btn: "Подписаться", wait: "Крестик появится через ", hint: "После закрытия окно больше не появится" },
             en: { title: "Hello!", desc: "This site is being developed by one person. <br>Please subscribe to my Telegram channel (mandatory).", btn: "Subscribe", wait: "Close button in ", hint: "After closing, this window will never appear again" }
@@ -154,7 +154,6 @@
         let timerStarted = false;
 
         window.onload = function() {
-            // Проверка: скрывали ли окно ранее?
             if (!localStorage.getItem('sub_hidden')) {
                 document.getElementById('subscription-screen').style.display = 'flex';
             }
@@ -188,7 +187,6 @@
         }
 
         function hideSubscription() {
-            // Сохраняем в память браузера, что окно закрыто навсегда
             localStorage.setItem('sub_hidden', 'true');
             document.getElementById('subscription-screen').style.display = 'none';
         }
