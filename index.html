@@ -35,7 +35,7 @@
         }
         #sidebar.open { left: 0; }
 
-        /* ОКНО ВЫБОРА ВЕРСИИ (GTA 4) */
+        /* ОКНО ВЫБОРА ВЕРСИИ */
         #download-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.8);
             z-index: 20000; display: none; justify-content: center; align-items: center;
@@ -48,7 +48,7 @@
         .modal-btn {
             display: block; width: 100%; padding: 15px; margin: 10px 0;
             background: var(--glass); border: 1px solid var(--border);
-            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700;
+            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;
         }
         .modal-btn:active { background: var(--accent); }
 
@@ -87,13 +87,8 @@
 <body>
 
     <div id="download-modal" onclick="closeDownloadModal(event)">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px;">Выберите версию GTA 4</h3>
-            <a href="https://buzzheavier.com/akft1ubwr2g1" class="modal-btn" target="_blank">20GB (Full)</a>
-            <a href="https://www.mediafire.com/file/nyahp4tmhb3i533" class="modal-btn" target="_blank">4GB (Lite)</a>
-            <a href="https://www.mediafire.com/file/ssf0pnf6rk2of95" class="modal-btn" target="_blank">7GB (Lite)</a>
-            <p style="margin-top: 15px; color: #777; font-size: 12px;" onclick="closeDownloadModal(null)">Закрыть</p>
-        </div>
+        <div class="modal-content" id="modal-content-area">
+            </div>
     </div>
 
     <div id="overlay" onclick="toggleMenu()"></div>
@@ -131,33 +126,53 @@
 
     <div class="container">
         <div class="games-list">
-            <div class="tile active" onclick="update('sleeping', this)"><img src="https://files.catbox.moe/asugs7.jpeg"></div>
+            <div class="tile active" onclick="update('gta5', this)"><img src="https://files.catbox.moe/munwwt.jpeg"></div>
+            <div class="tile" onclick="update('sleeping', this)"><img src="https://files.catbox.moe/asugs7.jpeg"></div>
             <div class="tile" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
             <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
             <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
             <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
             <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
             <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
-            <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
         </div>
         <div class="info">
-            <h1 id="t">Sleeping Dogs</h1>
-            <p id="d">Открытый мир, кунг-фу и захватывающая история под прикрытием в Гонконге.</p>
+            <h1 id="t">GTA 5</h1>
+            <p id="d">Легендарный экшен в Лос-Сантосе. Выберите подходящую версию для загрузки.</p>
             <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
         </div>
     </div>
 
     <script>
-        let currentGame = 'sleeping';
+        let currentGame = 'gta5';
         const gameData = {
-            sleeping: {t: "Sleeping Dogs", d: "Открытый мир, кунг-фу и захватывающая история под прикрытием в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
-            gta4: {t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "SPECIAL"},
+            gta5: {
+                t: "GTA 5", 
+                d: "Легендарный экшен в Лос-Сантосе. Выберите подходящую версию для загрузки.", 
+                l: "MULTI",
+                versions: [
+                    {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
+                    {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
+                    {n: "47GB (Lite)", u: "https://gofile.io/d/QVTf2B"},
+                    {n: "24GB (Lite)", u: "https://gofile.io/d/pikHJm"},
+                    {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}
+                ]
+            },
+            gta4: {
+                t: "GTA 4", 
+                d: "История Нико Беллика в Либерти-Сити.", 
+                l: "MULTI",
+                versions: [
+                    {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
+                    {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
+                    {n: "7GB (Lite)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"}
+                ]
+            },
+            sleeping: {t: "Sleeping Dogs", d: "Открытый мир и кунг-фу в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
             stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
             raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
             hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
-            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
-            henry: {t: "Henry Stickmin", d: "Сборник уморительных приключений Генри Стикмина.", l: "https://gofile.io/d/YourLink"}
+            ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"}
         };
 
         function update(key, el) {
@@ -170,10 +185,17 @@
         }
 
         function handleDownload() {
-            if (currentGame === 'gta4') {
+            const game = gameData[currentGame];
+            if (game.l === "MULTI") {
+                const area = document.getElementById('modal-content-area');
+                area.innerHTML = `<h3 style="margin-bottom: 15px;">Выберите версию ${game.t}</h3>`;
+                game.versions.forEach(v => {
+                    area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`;
+                });
+                area.innerHTML += `<p style="margin-top: 15px; color: #777; font-size: 12px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
                 document.getElementById('download-modal').style.display = 'flex';
             } else {
-                window.open(gameData[currentGame].l, '_blank');
+                window.open(game.l, '_blank');
             }
         }
 
