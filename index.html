@@ -126,7 +126,7 @@
 
     <div class="header">
         <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div style="font-size: 13px;">23:55 🔋</div>
+        <div style="font-size: 13px;">Online 🔋</div>
     </div>
 
     <div class="container">
@@ -136,6 +136,9 @@
             <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
             <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
             <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
+            <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
+            <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
+            <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
         </div>
         <div class="info">
             <h1 id="t">Sleeping Dogs</h1>
@@ -151,7 +154,10 @@
             gta4: {t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "SPECIAL"},
             stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
             raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"}
+            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
+            henry: {t: "Henry Stickmin", d: "Сборник уморительных приключений Генри Стикмина.", l: "https://gofile.io/d/YourLink"}
         };
 
         function update(key, el) {
