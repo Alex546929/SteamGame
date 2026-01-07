@@ -41,12 +41,11 @@
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
 
         #sidebar.open { left: 0; }
 
-        /* ОВЕРЛЕЙ (ЗАТЕМНЕНИЕ) */
         #overlay {
             position: fixed;
             inset: 0;
@@ -55,11 +54,12 @@
             z-index: 9999;
         }
 
-        /* ПРОФИЛЬ В МЕНЮ */
+        /* ПРОФИЛЬ */
         .profile-section {
             text-align: center;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
         }
 
         .avatar-wrapper {
@@ -99,7 +99,7 @@
             outline: none;
         }
 
-        /* КНОПКИ МЕНЮ */
+        /* КНОПКИ МЕНЮ И ИКОНКИ */
         .menu-item {
             display: flex;
             align-items: center;
@@ -114,7 +114,15 @@
             transition: 0.2s;
         }
 
-        .menu-item:active { transform: scale(0.97); background: rgba(255,255,255,0.2); }
+        .menu-item:active { transform: scale(0.97); }
+
+        .menu-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
 
         /* ЭКРАН ПОДПИСКИ */
         #subscription-screen {
@@ -154,11 +162,12 @@
         </div>
 
         <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
-            <span>📢</span> Telegram Channel
+            <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram Channel
         </a>
         <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
-            <span>👨‍💻</span> Developer
+            <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
         </a>
+        
         <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;">
             <span>⬅️</span> Назад
         </div>
@@ -167,18 +176,16 @@
     <div id="subscription-screen">
         <div class="sub-modal">
             <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
-            <h2 id="ui-title">Привет!</h2>
-            <p id="ui-desc" style="font-size: 14px; color: #ccc; margin: 15px 0 25px; line-height: 1.5;">
-                Сайт разрабатывается одним человеком. Подпишись на ТГ!
-            </p>
-            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" id="ui-btn" onclick="startTimer()">Подписаться</a>
+            <h2>Привет!</h2>
+            <p style="font-size: 14px; color: #ccc; margin: 15px 0 25px;">Подпишись на ТГ канал!</p>
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" onclick="startTimer()">Подписаться</a>
             <div id="timer-text" style="margin-top:15px; font-size:12px; color:#777;"></div>
         </div>
     </div>
 
     <div class="header">
         <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div style="font-size: 13px;">02:05 🔋</div>
+        <div style="font-size: 13px;">02:17 🔋</div>
     </div>
 
     <div class="container">
@@ -197,7 +204,6 @@
     </div>
 
     <script>
-        // ЛОГИКА МЕНЮ И ПРОФИЛЯ
         function toggleMenu() {
             const sb = document.getElementById('sidebar');
             const ov = document.getElementById('overlay');
@@ -221,7 +227,6 @@
             document.getElementById('display-name').innerText = val;
         }
 
-        // Загрузка данных профиля при старте
         window.addEventListener('load', () => {
             const savedName = localStorage.getItem('user_name');
             const savedAva = localStorage.getItem('user_ava');
@@ -230,19 +235,15 @@
                 document.getElementById('display-name').innerText = savedName;
             }
             if (savedAva) document.getElementById('user-avatar').src = savedAva;
-
-            if (!localStorage.getItem('sub_hidden')) {
-                document.getElementById('subscription-screen').style.display = 'flex';
-            }
+            if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
 
-        // ДАННЫЕ ИГР
         const gameData = {
-            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про киллера.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Италия эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами и полной разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
+            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
             brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"},
-            henry: {t: "The Henry Stickmin Collection", d: "Уморительные приключения.", l: "#"}
+            henry: {t: "The Henry Stickmin Collection", d: "Приключения Генри Стикмина.", l: "#"}
         };
 
         function update(key, el) {
@@ -254,7 +255,6 @@
             el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        // ТАЙМЕР ПОДПИСКИ
         let timerStarted = false;
         function startTimer() {
             if (timerStarted) return;
