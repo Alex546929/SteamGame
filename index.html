@@ -26,13 +26,13 @@
             flex-direction: column;
         }
 
-        /* --- ЭКРАН ПОДПИСКИ (OVERLAY) --- */
+        /* ЭКРАН ПОДПИСКИ */
         #subscription-screen {
             position: fixed;
             inset: 0;
             background: var(--bg-dark);
             z-index: 9999;
-            display: flex;
+            display: none; /* Управляется через JS */
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(15px);
@@ -68,61 +68,21 @@
         }
 
         .timer-status { margin-top: 15px; font-size: 12px; color: #777; min-height: 15px; }
+        .never-show-hint { font-size: 10px; color: #555; margin-top: 10px; display: none; }
 
-        /* --- ИНТЕРФЕЙС ЛАУНЧЕРА --- */
+        /* ИНТЕРФЕЙС ЛАУНЧЕРА */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
         .nav-tab { background: var(--glass); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
-        
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
-        
-        .games-list { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            overflow-x: auto; 
-            padding: 10px 0;
-            scrollbar-width: none; 
-        }
+        .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
         .games-list::-webkit-scrollbar { display: none; }
-
-        .tile { 
-            width: 100px; 
-            height: 140px; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            border: 2px solid transparent; 
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            flex-shrink: 0; 
-            opacity: 0.5; 
-        }
-        .tile.active { 
-            width: 130px; 
-            height: 180px; 
-            border-color: #fff; 
-            opacity: 1; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5); 
-        }
+        .tile { width: 100px; height: 140px; border-radius: 15px; overflow: hidden; border: 2px solid transparent; transition: 0.3s; flex-shrink: 0; opacity: 0.5; }
+        .tile.active { width: 130px; height: 180px; border-color: #fff; opacity: 1; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .tile img { width: 100%; height: 100%; object-fit: cover; }
-
         .info { display: flex; flex-direction: column; gap: 8px; }
         .info h1 { font-size: 22px; font-weight: 700; }
-        .info p { font-size: 13px; color: #ccc; line-height: 1.2; height: 32px; overflow: hidden; }
-
-        .download-btn { 
-            display: inline-block; 
-            background: #fff; 
-            color: #000; 
-            text-align: center; 
-            padding: 12px 0; 
-            width: 180px; 
-            border-radius: 10px; 
-            text-decoration: none; 
-            font-weight: 700; 
-            font-size: 14px; 
-            transition: 0.2s;
-        }
-        .download-btn:active { transform: scale(0.95); }
-
+        .info p { font-size: 13px; color: #ccc; line-height: 1.2; height: 32px; }
+        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 12px 0; width: 180px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -130,23 +90,20 @@
     <div id="subscription-screen">
         <div class="sub-modal">
             <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
-            
             <div class="lang-switcher">
                 <button class="lang-btn active" onclick="setLang('ru', this)">RU</button>
                 <button class="lang-btn" onclick="setLang('en', this)">EN</button>
             </div>
-
             <h2 id="ui-title">Привет!</h2>
             <p id="ui-desc" style="font-size: 14px; color: #ccc; margin: 15px 0 25px; line-height: 1.5;">
                 Данный сайт разрабатывается одним человеком. <br>
                 Пожалуйста, подпишись на мой телеграмм канал (обязательно).
             </p>
-
             <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" id="ui-btn" onclick="startTimer()">
                 Подписаться
             </a>
-
             <div class="timer-status" id="timer-text"></div>
+            <div class="never-show-hint" id="never-hint">После закрытия это окно больше не появится</div>
         </div>
     </div>
 
@@ -162,7 +119,6 @@
             <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
             <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
         </div>
-
         <div class="info">
             <h1 id="t">Hitman Absolution</h1>
             <p id="d">Стелс-экшен про легендарного киллера Агента 47.</p>
@@ -171,15 +127,14 @@
     </div>
 
     <script>
-        // Данные игр
+        // ДАННЫЕ ИГР
         const gameData = {
             hitman: {t: "Hitman Absolution", d: "Стелс-экшен про легендарного киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
             ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
             brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
-            henry: {t: "The Henry Stickmin Collection", d: "Сборник уморительных приключений Генри Стикмина.", l: "#"} // Ссылку можно вставить сюда
+            henry: {t: "The Henry Stickmin Collection", d: "Сборник уморительных приключений Генри Стикмина.", l: "https://gofile.io/d/YourLink"}
         };
 
-        // Логика лаунчера
         function update(key, el) {
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
@@ -189,14 +144,21 @@
             el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        // Логика подписки
+        // ЛОГИКА ПОДПИСКИ С ПАМЯТЬЮ
         const translations = {
-            ru: { title: "Привет!", desc: "Данный сайт разрабатывается одним человеком. <br>Пожалуйста, подпишись на мой телеграмм канал (обязательно).", btn: "Подписаться", wait: "Крестик появится через " },
-            en: { title: "Hello!", desc: "This site is being developed by one person. <br>Please subscribe to my Telegram channel (mandatory).", btn: "Subscribe", wait: "Close button in " }
+            ru: { title: "Привет!", desc: "Данный сайт разрабатывается одним человеком. <br>Пожалуйста, подпишись на мой телеграмм канал (обязательно).", btn: "Подписаться", wait: "Крестик появится через ", hint: "После закрытия окно больше не появится" },
+            en: { title: "Hello!", desc: "This site is being developed by one person. <br>Please subscribe to my Telegram channel (mandatory).", btn: "Subscribe", wait: "Close button in ", hint: "After closing, this window will never appear again" }
         };
 
         let currentLang = 'ru';
         let timerStarted = false;
+
+        window.onload = function() {
+            // Проверка: скрывали ли окно ранее?
+            if (!localStorage.getItem('sub_hidden')) {
+                document.getElementById('subscription-screen').style.display = 'flex';
+            }
+        };
 
         function setLang(lang, btn) {
             currentLang = lang;
@@ -205,6 +167,7 @@
             document.getElementById('ui-title').innerText = translations[lang].title;
             document.getElementById('ui-desc').innerHTML = translations[lang].desc;
             document.getElementById('ui-btn').innerText = translations[lang].btn;
+            document.getElementById('never-hint').innerText = translations[lang].hint;
         }
 
         function startTimer() {
@@ -219,13 +182,16 @@
                     clearInterval(interval);
                     status.innerText = "";
                     document.getElementById('closeBtn').style.display = 'block';
+                    document.getElementById('never-hint').style.display = 'block';
                 }
             }, 1000);
         }
 
         function hideSubscription() {
+            // Сохраняем в память браузера, что окно закрыто навсегда
+            localStorage.setItem('sub_hidden', 'true');
             document.getElementById('subscription-screen').style.display = 'none';
         }
     </script>
 </body>
-  </html>
+</html>
