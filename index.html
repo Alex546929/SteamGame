@@ -26,110 +26,46 @@
             flex-direction: column;
         }
 
-        /* БОКОВОЕ МЕНЮ (SIDEBAR) */
+        /* БОКОВОЕ МЕНЮ */
         #sidebar {
-            position: fixed;
-            left: -300px;
-            top: 0;
-            width: 280px;
-            height: 100%;
-            background: rgba(15, 12, 41, 0.95);
-            backdrop-filter: blur(20px);
-            z-index: 10000;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-right: 1px solid var(--border);
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
+            background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(20px);
+            z-index: 10000; transition: 0.4s; border-right: 1px solid var(--border);
+            padding: 40px 20px; display: flex; flex-direction: column; gap: 20px;
         }
-
         #sidebar.open { left: 0; }
 
-        #overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 9999;
+        /* ОКНО ВЫБОРА ВЕРСИИ (GTA 4) */
+        #download-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+            z-index: 20000; display: none; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
         }
+        .modal-content {
+            background: #1a1a2e; width: 90%; max-width: 350px; padding: 25px;
+            border-radius: 20px; border: 1px solid var(--border); text-align: center;
+        }
+        .modal-btn {
+            display: block; width: 100%; padding: 15px; margin: 10px 0;
+            background: var(--glass); border: 1px solid var(--border);
+            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700;
+        }
+        .modal-btn:active { background: var(--accent); }
+
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
 
         /* ПРОФИЛЬ */
-        .profile-section {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 10px;
-        }
+        .profile-section { text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+        .avatar-wrapper { width: 80px; height: 80px; margin: 0 auto 15px; position: relative; cursor: pointer; }
+        #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+        #user-name { font-size: 18px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
 
-        .avatar-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 15px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        #user-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-
-        .avatar-hint {
-            position: absolute;
-            bottom: 0; right: 0;
-            background: var(--accent);
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            font-size: 16px;
-            line-height: 24px;
-        }
-
-        #user-name {
-            font-size: 18px;
-            font-weight: 700;
-            background: none;
-            border: none;
-            color: #fff;
-            text-align: center;
-            width: 100%;
-            outline: none;
-        }
-
-        /* КНОПКИ МЕНЮ И ИКОНКИ */
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .menu-item:active { transform: scale(0.97); }
-
-        .menu-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 14px; }
+        .menu-icon { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
 
         /* ЭКРАН ПОДПИСКИ */
-        #subscription-screen {
-            position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999;
-            display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px);
-        }
-        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; position: relative; }
+        #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #aaa; cursor: pointer; display: none; }
         .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
 
@@ -144,80 +80,115 @@
         .tile img { width: 100%; height: 100%; object-fit: cover; }
         .info { display: flex; flex-direction: column; gap: 8px; }
         .info h1 { font-size: 22px; font-weight: 700; }
-        .info p { font-size: 13px; color: #ccc; line-height: 1.2; height: 32px; }
-        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 12px 0; width: 180px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; }
+        .info p { font-size: 13px; color: #ccc; height: 32px; }
+        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 12px 0; width: 180px; border-radius: 10px; text-decoration: none; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
+
+    <div id="download-modal" onclick="closeDownloadModal(event)">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px;">Выберите версию GTA 4</h3>
+            <a href="https://buzzheavier.com/akft1ubwr2g1" class="modal-btn" target="_blank">20GB (Full)</a>
+            <a href="https://www.mediafire.com/file/nyahp4tmhb3i533" class="modal-btn" target="_blank">4GB (Lite)</a>
+            <a href="https://www.mediafire.com/file/ssf0pnf6rk2of95" class="modal-btn" target="_blank">7GB (Lite)</a>
+            <p style="margin-top: 15px; color: #777; font-size: 12px;" onclick="closeDownloadModal(null)">Закрыть</p>
+        </div>
+    </div>
 
     <div id="overlay" onclick="toggleMenu()"></div>
     <div id="sidebar">
         <div class="profile-section">
             <div class="avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
-                <img id="user-avatar" src="https://via.placeholder.com/80" alt="Ava">
-                <div class="avatar-hint">+</div>
+                <img id="user-avatar" src="https://via.placeholder.com/80">
             </div>
             <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
             <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
         </div>
-
         <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
             <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram Channel
         </a>
         <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
             <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
         </a>
-        
-        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;">
-            <span>⬅️</span> Назад
-        </div>
+        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;"><span>⬅️</span> Назад</div>
     </div>
 
     <div id="subscription-screen">
         <div class="sub-modal">
             <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
             <h2>Привет!</h2>
-            <p style="font-size: 14px; color: #ccc; margin: 15px 0 25px;">Подпишись на ТГ канал!</p>
+            <p style="margin: 15px 0;">Подпишись на ТГ канал!</p>
             <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" onclick="startTimer()">Подписаться</a>
-            <div id="timer-text" style="margin-top:15px; font-size:12px; color:#777;"></div>
+            <div id="timer-text" style="margin-top:15px; font-size:12px;"></div>
         </div>
     </div>
 
     <div class="header">
         <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div style="font-size: 13px;">02:17 🔋</div>
+        <div style="font-size: 13px;">22:10 🔋</div>
     </div>
 
     <div class="container">
         <div class="games-list">
-            <div class="tile active" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
+            <div class="tile active" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
+            <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
+            <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
             <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
             <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
-            <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
-            <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
         </div>
         <div class="info">
-            <h1 id="t">Ravenfield</h1>
-            <p id="d">Масштабный шутер с ботами и полной разрушаемостью.</p>
-            <a id="l" href="https://megadb.net/kw2j7hdqenvy" class="download-btn">СКАЧАТЬ</a>
+            <h1 id="t">GTA 4</h1>
+            <p id="d">История Нико Беллика в Либерти-Сити.</p>
+            <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
         </div>
     </div>
 
     <script>
+        let currentGame = 'gta4';
+        const gameData = {
+            gta4: {t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "SPECIAL"},
+            stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
+            raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
+            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"}
+        };
+
+        function update(key, el) {
+            currentGame = key;
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('t').innerText = gameData[key].t;
+            document.getElementById('d').innerText = gameData[key].d;
+            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+
+        function handleDownload() {
+            if (currentGame === 'gta4') {
+                document.getElementById('download-modal').style.display = 'flex';
+            } else {
+                window.open(gameData[currentGame].l, '_blank');
+            }
+        }
+
+        function closeDownloadModal(e) {
+            if (!e || e.target.id === 'download-modal') {
+                document.getElementById('download-modal').style.display = 'none';
+            }
+        }
+
         function toggleMenu() {
             const sb = document.getElementById('sidebar');
-            const ov = document.getElementById('overlay');
-            sb.classList.toggle('open');
-            ov.style.display = sb.classList.contains('open') ? 'block' : 'none';
+            document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none';
         }
 
         function changeAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = (e) => {
                     document.getElementById('user-avatar').src = e.target.result;
                     localStorage.setItem('user_ava', e.target.result);
-                };
+                }
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -228,47 +199,21 @@
         }
 
         window.addEventListener('load', () => {
-            const savedName = localStorage.getItem('user_name');
-            const savedAva = localStorage.getItem('user_ava');
-            if (savedName) {
-                document.getElementById('user-name').value = savedName;
-                document.getElementById('display-name').innerText = savedName;
-            }
-            if (savedAva) document.getElementById('user-avatar').src = savedAva;
+            const name = localStorage.getItem('user_name');
+            const ava = localStorage.getItem('user_ava');
+            if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
+            if (ava) document.getElementById('user-avatar').src = ava;
             if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
-
-        const gameData = {
-            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами и полной разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
-            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"},
-            henry: {t: "The Henry Stickmin Collection", d: "Приключения Генри Стикмина.", l: "#"}
-        };
-
-        function update(key, el) {
-            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('t').innerText = gameData[key].t;
-            document.getElementById('d').innerText = gameData[key].d;
-            document.getElementById('l').href = gameData[key].l;
-            el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        }
 
         let timerStarted = false;
         function startTimer() {
             if (timerStarted) return;
             timerStarted = true;
             let sec = 8;
-            const status = document.getElementById('timer-text');
             const inv = setInterval(() => {
-                status.innerText = "Крестик появится через " + sec + "...";
-                sec--;
-                if (sec < 0) {
-                    clearInterval(inv);
-                    status.innerText = "";
-                    document.getElementById('closeBtn').style.display = 'block';
-                }
+                document.getElementById('timer-text').innerText = "Крестик появится через " + sec + "...";
+                if (sec-- <= 0) { clearInterval(inv); document.getElementById('closeBtn').style.display = 'block'; }
             }, 1000);
         }
 
