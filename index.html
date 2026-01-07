@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GameHub Helio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f0c29;
+            --bg-purple: #302b63;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
+            --accent-tg: #24A1DE;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-purple));
+            height: 100vh;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- ЭКРАН ПОДПИСКИ (OVERLAY) --- */
+        #subscription-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+        }
+
+        .sub-modal {
+            background: #1a1a2e;
+            width: 90%;
+            max-width: 380px;
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-x {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 30px; color: #aaa;
+            cursor: pointer;
+            display: none;
+        }
+
+        .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .lang-btn { background: var(--glass); border: 1px solid var(--border); color: #fff; padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; }
+        .lang-btn.active { background: #fff; color: #000; }
+
+        .tg-link {
+            display: block; background: var(--accent-tg); color: #fff;
+            padding: 15px; border-radius: 15px; text-decoration: none;
+            font-weight: 700; margin-top: 20px;
+        }
+
+        .timer-status { margin-top: 15px; font-size: 12px; color: #777; min-height: 15px; }
+
+        /* --- ИНТЕРФЕЙС ЛАУНЧЕРА --- */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+        .nav-tab { background: var(--glass); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
+        
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
+        
+        .games-list { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            overflow-x: auto; 
+            padding: 10px 0;
+            scrollbar-width: none; 
+        }
+        .games-list::-webkit-scrollbar { display: none; }
+
+        .tile { 
+            width: 100px; 
+            height: 140px; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            border: 2px solid transparent; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            flex-shrink: 0; 
+            opacity: 0.5; 
+        }
+        .tile.active { 
+            width: 130px; 
+            height: 180px; 
+            border-color: #fff; 
+            opacity: 1; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5); 
+        }
+        .tile img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info { display: flex; flex-direction: column; gap: 8px; }
+        .info h1 { font-size: 22px; font-weight: 700; }
+        .info p { font-size: 13px; color: #ccc; line-height: 1.2; height: 32px; overflow: hidden; }
+
+        .download-btn { 
+            display: inline-block; 
+            background: #fff; 
+            color: #000; 
+            text-align: center; 
+            padding: 12px 0; 
+            width: 180px; 
+            border-radius: 10px; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 14px; 
+            transition: 0.2s;
+        }
+        .download-btn:active { transform: scale(0.95); }
+
+    </style>
+</head>
+<body>
+
+    <div id="subscription-screen">
+        <div class="sub-modal">
+            <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
+            
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLang('ru', this)">RU</button>
+                <button class="lang-btn" onclick="setLang('en', this)">EN</button>
+            </div>
+
+            <h2 id="ui-title">Привет!</h2>
+            <p id="ui-desc" style="font-size: 14px; color: #ccc; margin: 15px 0 25px; line-height: 1.5;">
+                Данный сайт разрабатывается одним человеком. <br>
+                Пожалуйста, подпишись на мой телеграмм канал (обязательно).
+            </p>
+
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" id="ui-btn" onclick="startTimer()">
+                Подписаться
+            </a>
+
+            <div class="timer-status" id="timer-text"></div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="nav-tab">LB <b>Moe</b> RB</div>
+        <div style="font-size: 13px;">02:05 🔋</div>
+    </div>
+
+    <div class="container">
+        <div class="games-list">
+            <div class="tile active" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
+            <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
+            <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
+            <div class="tile" onclick="update('henry', this)"><img src="https://files.catbox.moe/2oajd8.jpeg"></div>
+        </div>
+
+        <div class="info">
+            <h1 id="t">Hitman Absolution</h1>
+            <p id="d">Стелс-экшен про легендарного киллера Агента 47.</p>
+            <a id="l" href="https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar" class="download-btn">СКАЧАТЬ</a>
+        </div>
+    </div>
+
+    <script>
+        // Данные игр
+        const gameData = {
+            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про легендарного киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
+            henry: {t: "The Henry Stickmin Collection", d: "Сборник уморительных приключений Генри Стикмина.", l: "#"} // Ссылку можно вставить сюда
+        };
+
+        // Логика лаунчера
+        function update(key, el) {
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('t').innerText = gameData[key].t;
+            document.getElementById('d').innerText = gameData[key].d;
+            document.getElementById('l').href = gameData[key].l;
+            el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+
+        // Логика подписки
+        const translations = {
+            ru: { title: "Привет!", desc: "Данный сайт разрабатывается одним человеком. <br>Пожалуйста, подпишись на мой телеграмм канал (обязательно).", btn: "Подписаться", wait: "Крестик появится через " },
+            en: { title: "Hello!", desc: "This site is being developed by one person. <br>Please subscribe to my Telegram channel (mandatory).", btn: "Subscribe", wait: "Close button in " }
+        };
+
+        let currentLang = 'ru';
+        let timerStarted = false;
+
+        function setLang(lang, btn) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('ui-title').innerText = translations[lang].title;
+            document.getElementById('ui-desc').innerHTML = translations[lang].desc;
+            document.getElementById('ui-btn').innerText = translations[lang].btn;
+        }
+
+        function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
+            let seconds = 8;
+            const status = document.getElementById('timer-text');
+            const interval = setInterval(() => {
+                status.innerText = translations[currentLang].wait + seconds + "...";
+                seconds--;
+                if (seconds < 0) {
+                    clearInterval(interval);
+                    status.innerText = "";
+                    document.getElementById('closeBtn').style.display = 'block';
+                }
+            }, 1000);
+        }
+
+        function hideSubscription() {
+            document.getElementById('subscription-screen').style.display = 'none';
+        }
+    </script>
+</body>
+  </html>
