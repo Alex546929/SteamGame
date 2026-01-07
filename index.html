@@ -11,7 +11,7 @@
             --bg-purple: #302b63;
             --glass: rgba(255, 255, 255, 0.1);
             --border: rgba(255, 255, 255, 0.2);
-            --accent-tg: #24A1DE;
+            --accent: #24A1DE;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,53 +26,108 @@
             flex-direction: column;
         }
 
-        /* ЭКРАН ПОДПИСКИ */
-        #subscription-screen {
+        /* БОКОВОЕ МЕНЮ (SIDEBAR) */
+        #sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-right: 1px solid var(--border);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        #sidebar.open { left: 0; }
+
+        /* ОВЕРЛЕЙ (ЗАТЕМНЕНИЕ) */
+        #overlay {
             position: fixed;
             inset: 0;
-            background: var(--bg-dark);
+            background: rgba(0,0,0,0.5);
+            display: none;
             z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(15px);
         }
 
-        .sub-modal {
-            background: #1a1a2e;
-            width: 90%;
-            max-width: 380px;
-            padding: 30px;
-            border-radius: 25px;
-            border: 1px solid var(--border);
+        /* ПРОФИЛЬ В МЕНЮ */
+        .profile-section {
             text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .avatar-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
             position: relative;
-        }
-
-        .close-x {
-            position: absolute;
-            top: 15px; right: 20px;
-            font-size: 30px; color: #aaa;
             cursor: pointer;
-            display: none;
         }
 
-        .lang-switcher { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .lang-btn { background: var(--glass); border: 1px solid var(--border); color: #fff; padding: 5px 12px; border-radius: 10px; cursor: pointer; font-size: 12px; }
-        .lang-btn.active { background: #fff; color: #000; }
-
-        .tg-link {
-            display: block; background: var(--accent-tg); color: #fff;
-            padding: 15px; border-radius: 15px; text-decoration: none;
-            font-weight: 700; margin-top: 20px;
+        #user-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
         }
 
-        .timer-status { margin-top: 15px; font-size: 12px; color: #777; min-height: 15px; }
-        .never-show-hint { font-size: 10px; color: #555; margin-top: 10px; display: none; }
+        .avatar-hint {
+            position: absolute;
+            bottom: 0; right: 0;
+            background: var(--accent);
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 24px;
+        }
+
+        #user-name {
+            font-size: 18px;
+            font-weight: 700;
+            background: none;
+            border: none;
+            color: #fff;
+            text-align: center;
+            width: 100%;
+            outline: none;
+        }
+
+        /* КНОПКИ МЕНЮ */
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu-item:active { transform: scale(0.97); background: rgba(255,255,255,0.2); }
+
+        /* ЭКРАН ПОДПИСКИ */
+        #subscription-screen {
+            position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999;
+            display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px);
+        }
+        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; position: relative; }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #aaa; cursor: pointer; display: none; }
+        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
 
         /* ИНТЕРФЕЙС ЛАУНЧЕРА */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
-        .nav-tab { background: var(--glass); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
+        .nav-tab { background: var(--glass); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; }
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
         .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
         .games-list::-webkit-scrollbar { display: none; }
@@ -87,28 +142,42 @@
 </head>
 <body>
 
+    <div id="overlay" onclick="toggleMenu()"></div>
+    <div id="sidebar">
+        <div class="profile-section">
+            <div class="avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
+                <img id="user-avatar" src="https://via.placeholder.com/80" alt="Ava">
+                <div class="avatar-hint">+</div>
+            </div>
+            <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
+            <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
+        </div>
+
+        <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
+            <span>📢</span> Telegram Channel
+        </a>
+        <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
+            <span>👨‍💻</span> Developer
+        </a>
+        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;">
+            <span>⬅️</span> Назад
+        </div>
+    </div>
+
     <div id="subscription-screen">
         <div class="sub-modal">
             <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
-            <div class="lang-switcher">
-                <button class="lang-btn active" onclick="setLang('ru', this)">RU</button>
-                <button class="lang-btn" onclick="setLang('en', this)">EN</button>
-            </div>
             <h2 id="ui-title">Привет!</h2>
             <p id="ui-desc" style="font-size: 14px; color: #ccc; margin: 15px 0 25px; line-height: 1.5;">
-                Данный сайт разрабатывается одним человеком. <br>
-                Пожалуйста, подпишись на мой телеграмм канал (обязательно).
+                Сайт разрабатывается одним человеком. Подпишись на ТГ!
             </p>
-            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" id="ui-btn" onclick="startTimer()">
-                Подписаться
-            </a>
-            <div class="timer-status" id="timer-text"></div>
-            <div class="never-show-hint" id="never-hint">После закрытия это окно больше не появится</div>
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" id="ui-btn" onclick="startTimer()">Подписаться</a>
+            <div id="timer-text" style="margin-top:15px; font-size:12px; color:#777;"></div>
         </div>
     </div>
 
     <div class="header">
-        <div class="nav-tab">LB <b>Moe</b> RB</div>
+        <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
         <div style="font-size: 13px;">02:05 🔋</div>
     </div>
 
@@ -128,12 +197,52 @@
     </div>
 
     <script>
+        // ЛОГИКА МЕНЮ И ПРОФИЛЯ
+        function toggleMenu() {
+            const sb = document.getElementById('sidebar');
+            const ov = document.getElementById('overlay');
+            sb.classList.toggle('open');
+            ov.style.display = sb.classList.contains('open') ? 'block' : 'none';
+        }
+
+        function changeAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('user-avatar').src = e.target.result;
+                    localStorage.setItem('user_ava', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveName(val) {
+            localStorage.setItem('user_name', val);
+            document.getElementById('display-name').innerText = val;
+        }
+
+        // Загрузка данных профиля при старте
+        window.addEventListener('load', () => {
+            const savedName = localStorage.getItem('user_name');
+            const savedAva = localStorage.getItem('user_ava');
+            if (savedName) {
+                document.getElementById('user-name').value = savedName;
+                document.getElementById('display-name').innerText = savedName;
+            }
+            if (savedAva) document.getElementById('user-avatar').src = savedAva;
+
+            if (!localStorage.getItem('sub_hidden')) {
+                document.getElementById('subscription-screen').style.display = 'flex';
+            }
+        });
+
+        // ДАННЫЕ ИГР
         const gameData = {
-            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами и полной разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про легендарного киллера Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Станьте ассасином в Италии эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
-            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков в песочнице.", l: "https://gofile.io/d/tGx53U"},
-            henry: {t: "The Henry Stickmin Collection", d: "Сборник уморительных приключений Генри Стикмина.", l: "https://gofile.io/d/YourLink"}
+            raven: {t: "Ravenfield", d: "Масштабный шутер с ботами.", l: "https://megadb.net/kw2j7hdqenvy"},
+            hitman: {t: "Hitman Absolution", d: "Стелс-экшен про киллера.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Италия эпохи Возрождения.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"},
+            henry: {t: "The Henry Stickmin Collection", d: "Уморительные приключения.", l: "#"}
         };
 
         function update(key, el) {
@@ -145,43 +254,20 @@
             el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
         }
 
-        const translations = {
-            ru: { title: "Привет!", desc: "Данный сайт разрабатывается одним человеком. <br>Пожалуйста, подпишись на мой телеграмм канал (обязательно).", btn: "Подписаться", wait: "Крестик появится через ", hint: "После закрытия окно больше не появится" },
-            en: { title: "Hello!", desc: "This site is being developed by one person. <br>Please subscribe to my Telegram channel (mandatory).", btn: "Subscribe", wait: "Close button in ", hint: "After closing, this window will never appear again" }
-        };
-
-        let currentLang = 'ru';
+        // ТАЙМЕР ПОДПИСКИ
         let timerStarted = false;
-
-        window.onload = function() {
-            if (!localStorage.getItem('sub_hidden')) {
-                document.getElementById('subscription-screen').style.display = 'flex';
-            }
-        };
-
-        function setLang(lang, btn) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('ui-title').innerText = translations[lang].title;
-            document.getElementById('ui-desc').innerHTML = translations[lang].desc;
-            document.getElementById('ui-btn').innerText = translations[lang].btn;
-            document.getElementById('never-hint').innerText = translations[lang].hint;
-        }
-
         function startTimer() {
             if (timerStarted) return;
             timerStarted = true;
-            let seconds = 8;
+            let sec = 8;
             const status = document.getElementById('timer-text');
-            const interval = setInterval(() => {
-                status.innerText = translations[currentLang].wait + seconds + "...";
-                seconds--;
-                if (seconds < 0) {
-                    clearInterval(interval);
+            const inv = setInterval(() => {
+                status.innerText = "Крестик появится через " + sec + "...";
+                sec--;
+                if (sec < 0) {
+                    clearInterval(inv);
                     status.innerText = "";
                     document.getElementById('closeBtn').style.display = 'block';
-                    document.getElementById('never-hint').style.display = 'block';
                 }
             }, 1000);
         }
