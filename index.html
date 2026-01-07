@@ -65,7 +65,7 @@
 
         /* ЭКРАН ПОДПИСКИ */
         #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; }
+        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; position: relative; }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #aaa; cursor: pointer; display: none; }
         .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
 
@@ -80,7 +80,7 @@
         .tile img { width: 100%; height: 100%; object-fit: cover; }
         .info { display: flex; flex-direction: column; gap: 8px; }
         .info h1 { font-size: 22px; font-weight: 700; }
-        .info p { font-size: 13px; color: #ccc; height: 32px; }
+        .info p { font-size: 13px; color: #ccc; height: 32px; overflow: hidden; }
         .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 12px 0; width: 180px; border-radius: 10px; text-decoration: none; font-weight: 700; cursor: pointer; }
     </style>
 </head>
@@ -126,32 +126,32 @@
 
     <div class="header">
         <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div style="font-size: 13px;">22:10 🔋</div>
+        <div style="font-size: 13px;">23:55 🔋</div>
     </div>
 
     <div class="container">
         <div class="games-list">
-            <div class="tile active" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
+            <div class="tile active" onclick="update('sleeping', this)"><img src="https://files.catbox.moe/asugs7.jpeg"></div>
+            <div class="tile" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
             <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
             <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
             <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
-            <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
         </div>
         <div class="info">
-            <h1 id="t">GTA 4</h1>
-            <p id="d">История Нико Беллика в Либерти-Сити.</p>
+            <h1 id="t">Sleeping Dogs</h1>
+            <p id="d">Открытый мир, кунг-фу и захватывающая история под прикрытием в Гонконге.</p>
             <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
         </div>
     </div>
 
     <script>
-        let currentGame = 'gta4';
+        let currentGame = 'sleeping';
         const gameData = {
+            sleeping: {t: "Sleeping Dogs", d: "Открытый мир, кунг-фу и захватывающая история под прикрытием в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
             gta4: {t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "SPECIAL"},
             stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
             raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"}
+            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"}
         };
 
         function update(key, el) {
