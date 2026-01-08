@@ -14,22 +14,71 @@
             --accent: #24A1DE;
             --radius: 15px;
             --blur: 10px;
+            --glow: rgba(255, 255, 255, 0.3); /* Цвет подсветки */
         }
+
+        /* ТЕМА iOS 26 */
         body.theme-ios {
             --glass: rgba(255, 255, 255, 0.15);
             --border: rgba(255, 255, 255, 0.3);
             --radius: 25px;
             --blur: 30px;
+            --glow: rgba(36, 161, 222, 0.5); /* Голубоватая подсветка для iOS */
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
             font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, var(--bg-dark), var(--bg-purple));
-            height: 100vh; color: #fff; overflow: hidden; display: flex; flex-direction: column; transition: 0.5s;
+            height: 100vh;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 0.5s ease;
         }
-        body.theme-ios .tile, body.theme-ios .download-btn, body.theme-ios .nav-tab, body.theme-ios .menu-item, body.theme-ios .modal-content {
-            backdrop-filter: blur(var(--blur)); background: var(--glass); border: 1px solid var(--border); border-radius: var(--radius);
+
+        /* ЭФФЕКТ ПОДСВЕТКИ ПРИ НАВЕДЕНИИ (ХОВЕР) */
+        .tile, .download-btn, .menu-item, .nav-tab, .theme-btn, .modal-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
         }
+
+        /* Эффект свечения и увеличения */
+        .tile:hover, .tile.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow);
+            border-color: #fff !important;
+            opacity: 1 !important;
+            z-index: 10;
+        }
+
+        .download-btn:hover, .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--glow);
+            filter: brightness(1.1);
+        }
+
+        .menu-item:hover {
+            background: var(--border);
+            padding-left: 20px; /* Эффект смещения при наведении */
+            box-shadow: inset 0 0 10px var(--glow);
+        }
+
+        /* СТИЛИ КОНТЕЙНЕРОВ */
+        body.theme-ios .tile, 
+        body.theme-ios .download-btn, 
+        body.theme-ios .nav-tab,
+        body.theme-ios .menu-item,
+        body.theme-ios .modal-content {
+            backdrop-filter: blur(var(--blur));
+            background: var(--glass);
+            border: 1px solid var(--border);
+        }
+
+        /* БОКОВОЕ МЕНЮ */
         #sidebar {
             position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
             background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(25px);
@@ -37,29 +86,41 @@
             padding: 30px 20px; display: flex; flex-direction: column; gap: 15px;
         }
         #sidebar.open { left: 0; }
+
         .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-        .theme-btn { flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; cursor: pointer; }
-        .theme-btn.active { background: var(--accent); border-color: #fff; }
+        .theme-btn { flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; }
+        .theme-btn.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 10px var(--accent); }
+
+        /* ОКНО ВЫБОРА */
         #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
         .modal-content { background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
         .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; }
+
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
+
         .profile-section { text-align: center; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .avatar-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; cursor: pointer; }
+        .avatar-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; }
         #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
         #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
+
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
         .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
+
+        /* ГЕЙМПАД-ИНТЕРФЕЙС */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
         .nav-tab { background: var(--glass); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
-        .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
         .games-list::-webkit-scrollbar { display: none; }
-        .tile { width: 110px; height: 150px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; transition: 0.4s; flex-shrink: 0; opacity: 0.6; }
-        .tile.active { width: 140px; height: 190px; border-color: #fff; opacity: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .tile img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        
+        .tile { width: 110px; height: 150px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; flex-shrink: 0; opacity: 0.6; }
+        .tile.active { width: 140px; height: 190px; opacity: 1; }
+        .tile img { width: 100%; height: 100%; object-fit: cover; }
+
         .info { display: flex; flex-direction: column; gap: 8px; }
-        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; cursor: pointer; }
+        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
+
+        /* ПОДПИСКА */
         #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
         .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
@@ -81,11 +142,13 @@
             <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
             <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
         </div>
+
         <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Тема оформления:</p>
         <div class="theme-selector">
             <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">Стандарт</button>
             <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS 26</button>
         </div>
+
         <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
             <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram
         </a>
@@ -161,7 +224,6 @@
             document.body.className = 'theme-' + theme;
             document.getElementById('btn-std').classList.toggle('active', theme === 'standard');
             document.getElementById('btn-ios').classList.toggle('active', theme === 'ios');
-            document.getElementById('status-bar').innerText = theme === 'ios' ? 'iOS 26 🔋' : 'Online 🔋';
             localStorage.setItem('user_theme', theme);
         }
 
