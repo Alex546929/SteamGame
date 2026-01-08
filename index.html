@@ -12,6 +12,16 @@
             --glass: rgba(255, 255, 255, 0.1);
             --border: rgba(255, 255, 255, 0.2);
             --accent: #24A1DE;
+            --radius: 15px;
+            --blur: 10px;
+        }
+
+        /* ТЕМА iOS 26 */
+        body.theme-ios {
+            --glass: rgba(255, 255, 255, 0.15);
+            --border: rgba(255, 255, 255, 0.3);
+            --radius: 25px;
+            --blur: 30px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -24,71 +34,88 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            transition: 0.5s;
+        }
+
+        /* СТЕКЛЯННЫЙ ЭФФЕКТ ДЛЯ ВСЕГО В iOS ТЕМЕ */
+        body.theme-ios .tile, 
+        body.theme-ios .download-btn, 
+        body.theme-ios .nav-tab,
+        body.theme-ios .menu-item,
+        body.theme-ios .modal-content {
+            backdrop-filter: blur(var(--blur));
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
         }
 
         /* БОКОВОЕ МЕНЮ */
         #sidebar {
             position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
-            background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(20px);
+            background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(25px);
             z-index: 10000; transition: 0.4s; border-right: 1px solid var(--border);
-            padding: 40px 20px; display: flex; flex-direction: column; gap: 20px;
+            padding: 30px 20px; display: flex; flex-direction: column; gap: 15px;
         }
         #sidebar.open { left: 0; }
+
+        .theme-selector {
+            display: flex; gap: 10px; margin-bottom: 15px;
+        }
+        .theme-btn {
+            flex: 1; padding: 10px; font-size: 11px; border-radius: 10px;
+            background: var(--glass); border: 1px solid var(--border); color: #fff; cursor: pointer;
+        }
+        .theme-btn.active { background: var(--accent); border-color: #fff; }
 
         /* ОКНО ВЫБОРА ВЕРСИИ */
         #download-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.8);
             z-index: 20000; display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
         }
         .modal-content {
-            background: #1a1a2e; width: 90%; max-width: 350px; padding: 25px;
-            border-radius: 20px; border: 1px solid var(--border); text-align: center;
+            background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px;
+            border-radius: var(--radius); border: 1px solid var(--border); text-align: center;
         }
         .modal-btn {
             display: block; width: 100%; padding: 15px; margin: 10px 0;
             background: var(--glass); border: 1px solid var(--border);
-            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 14px;
+            color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700;
         }
-        .modal-btn:active { background: var(--accent); }
 
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
 
-        /* ПРОФИЛЬ */
-        .profile-section { text-align: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-        .avatar-wrapper { width: 80px; height: 80px; margin: 0 auto 15px; position: relative; cursor: pointer; }
+        .profile-section { text-align: center; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .avatar-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; cursor: pointer; }
         #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
-        #user-name { font-size: 18px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
+        #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
 
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 12px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 14px; }
-        .menu-icon { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
+        .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
 
-        /* ЭКРАН ПОДПИСКИ */
-        #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; border: 1px solid var(--border); text-align: center; position: relative; }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #aaa; cursor: pointer; display: none; }
-        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
-
-        /* ИНТЕРФЕЙС ЛАУНЧЕРА */
+        /* ИНТЕРФЕЙС */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
-        .nav-tab { background: var(--glass); padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; }
+        .nav-tab { background: var(--glass); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
         .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
         .games-list::-webkit-scrollbar { display: none; }
-        .tile { width: 100px; height: 140px; border-radius: 15px; overflow: hidden; border: 2px solid transparent; transition: 0.3s; flex-shrink: 0; opacity: 0.5; }
-        .tile.active { width: 130px; height: 180px; border-color: #fff; opacity: 1; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
+        .tile { width: 110px; height: 150px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; transition: 0.4s; flex-shrink: 0; opacity: 0.6; }
+        .tile.active { width: 140px; height: 190px; border-color: #fff; opacity: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .tile img { width: 100%; height: 100%; object-fit: cover; }
         .info { display: flex; flex-direction: column; gap: 8px; }
-        .info h1 { font-size: 22px; font-weight: 700; }
-        .info p { font-size: 13px; color: #ccc; height: 32px; overflow: hidden; }
-        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 12px 0; width: 180px; border-radius: 10px; text-decoration: none; font-weight: 700; cursor: pointer; }
+        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
+
+        /* ТАЙМЕР ПОДПИСКИ */
+        #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
+        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
+        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
     </style>
 </head>
-<body>
+<body class="theme-standard">
 
     <div id="download-modal" onclick="closeDownloadModal(event)">
-        <div class="modal-content" id="modal-content-area">
-            </div>
+        <div class="modal-content" id="modal-content-area"></div>
     </div>
 
     <div id="overlay" onclick="toggleMenu()"></div>
@@ -100,8 +127,15 @@
             <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
             <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
         </div>
+
+        <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Тема оформления:</p>
+        <div class="theme-selector">
+            <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">Стандарт</button>
+            <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS 26</button>
+        </div>
+
         <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
-            <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram Channel
+            <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram
         </a>
         <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
             <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
@@ -113,15 +147,15 @@
         <div class="sub-modal">
             <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
             <h2>Привет!</h2>
-            <p style="margin: 15px 0;">Подпишись на ТГ канал!</p>
+            <p style="margin: 15px 0;">Подпишись на наш Telegram!</p>
             <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" onclick="startTimer()">Подписаться</a>
-            <div id="timer-text" style="margin-top:15px; font-size:12px;"></div>
+            <div id="timer-text" style="margin-top:15px; font-size:12px; color: #777;"></div>
         </div>
     </div>
 
     <div class="header">
         <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div style="font-size: 13px;">Online 🔋</div>
+        <div style="font-size: 13px;">iOS 26 🔋</div>
     </div>
 
     <div class="container">
@@ -137,7 +171,7 @@
         </div>
         <div class="info">
             <h1 id="t">GTA 5</h1>
-            <p id="d">Легендарный экшен в Лос-Сантосе. Выберите подходящую версию для загрузки.</p>
+            <p id="d" style="font-size: 13px; color: #ccc; height: 40px;">Загрузите легендарную GTA 5 в разных версиях.</p>
             <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
         </div>
     </div>
@@ -146,9 +180,7 @@
         let currentGame = 'gta5';
         const gameData = {
             gta5: {
-                t: "GTA 5", 
-                d: "Легендарный экшен в Лос-Сантосе. Выберите подходящую версию для загрузки.", 
-                l: "MULTI",
+                t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе. Выберите версию.", l: "MULTI",
                 versions: [
                     {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
                     {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
@@ -158,9 +190,7 @@
                 ]
             },
             gta4: {
-                t: "GTA 4", 
-                d: "История Нико Беллика в Либерти-Сити.", 
-                l: "MULTI",
+                t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "MULTI",
                 versions: [
                     {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
                     {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
@@ -175,6 +205,13 @@
             brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"}
         };
 
+        function setTheme(theme) {
+            document.body.className = 'theme-' + theme;
+            document.getElementById('btn-std').classList.toggle('active', theme === 'standard');
+            document.getElementById('btn-ios').classList.toggle('active', theme === 'ios');
+            localStorage.setItem('user_theme', theme);
+        }
+
         function update(key, el) {
             currentGame = key;
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
@@ -188,21 +225,15 @@
             const game = gameData[currentGame];
             if (game.l === "MULTI") {
                 const area = document.getElementById('modal-content-area');
-                area.innerHTML = `<h3 style="margin-bottom: 15px;">Выберите версию ${game.t}</h3>`;
-                game.versions.forEach(v => {
-                    area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`;
-                });
-                area.innerHTML += `<p style="margin-top: 15px; color: #777; font-size: 12px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
+                area.innerHTML = `<h3>Выбор версии</h3>`;
+                game.versions.forEach(v => area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`);
+                area.innerHTML += `<p style="margin-top:15px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
                 document.getElementById('download-modal').style.display = 'flex';
-            } else {
-                window.open(game.l, '_blank');
-            }
+            } else { window.open(game.l, '_blank'); }
         }
 
         function closeDownloadModal(e) {
-            if (!e || e.target.id === 'download-modal') {
-                document.getElementById('download-modal').style.display = 'none';
-            }
+            if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none';
         }
 
         function toggleMenu() {
@@ -229,8 +260,10 @@
         window.addEventListener('load', () => {
             const name = localStorage.getItem('user_name');
             const ava = localStorage.getItem('user_ava');
+            const theme = localStorage.getItem('user_theme') || 'standard';
             if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
             if (ava) document.getElementById('user-avatar').src = ava;
+            setTheme(theme);
             if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
 
