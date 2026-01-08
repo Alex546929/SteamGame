@@ -86,8 +86,8 @@
 
         /* MODAL */
         #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .modal-content { background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
-        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; }
+        .modal-content { background: rgba(26, 26, 46, 0.9); width: 90%; max-width: 380px; max-height: 80vh; overflow-y: auto; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
+        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 13px; }
 
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
 
@@ -97,7 +97,7 @@
         #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
 
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
-        .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
+        .menu-icon { width: 25px; height: 25px; border-radius: 50%; object-fit: cover; }
 
         /* MAIN UI */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; z-index: 100; }
@@ -117,7 +117,6 @@
 
         .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
 
-        /* PSP BUTTON STYLE */
         .psp-btn-icon { display: none; width: 20px; height: 20px; border: 2px solid #fff; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; }
         body.theme-psp .psp-btn-icon { display: inline-flex; }
 
@@ -125,6 +124,7 @@
         #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
         .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
+        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
     </style>
 </head>
 <body class="theme-standard">
@@ -198,9 +198,31 @@
 
     <script>
         let currentGame = 'gta5';
+        let timerStarted = false;
+
         const gameData = {
-            gta5: { t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе. Выберите версию.", l: "MULTI", versions: [{n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"}, {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}]},
-            gta4: { t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "MULTI", versions: [{n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"}]},
+            gta5: {
+                t: "GTA 5", 
+                d: "Легендарный экшен. Доступно 5 версий (от Lite до Full).", 
+                l: "MULTI",
+                versions: [
+                    {n: "10GB (Ultra Lite) - GoFile", u: "https://gofile.io/d/8Gvabc"},
+                    {n: "12GB (Ultra Lite) - Buzz", u: "https://buzzheavier.com/p5gy6hp2jiup"},
+                    {n: "24GB (Lite) - GoFile", u: "https://gofile.io/d/pikHJm"},
+                    {n: "47GB (Lite) - GoFile", u: "https://gofile.io/d/QVTf2B"},
+                    {n: "100GB (Full Original)", u: "https://buzzheavier.com/rkksxkwu6kef"}
+                ]
+            },
+            gta4: {
+                t: "GTA 4", 
+                d: "История Нико Беллика. Доступно 3 версии.", 
+                l: "MULTI",
+                versions: [
+                    {n: "4GB (Super Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
+                    {n: "7GB (Lite Repack)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"},
+                    {n: "20GB (Full Complete)", u: "https://buzzheavier.com/akft1ubwr2g1"}
+                ]
+            },
             sleeping: {t: "Sleeping Dogs", d: "Открытый мир и кунг-фу в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
             stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
             raven: {t: "Ravenfield", d: "Шутер с ботами.", l: "https://megadb.net/kw2j7hdqenvy"},
@@ -233,13 +255,22 @@
                 const area = document.getElementById('modal-content-area');
                 area.innerHTML = `<h3>Выбор версии</h3>`;
                 game.versions.forEach(v => area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`);
-                area.innerHTML += `<p style="margin-top:15px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
+                area.innerHTML += `<p style="margin-top:15px; cursor:pointer; color:#aaa; font-size:12px;" onclick="closeDownloadModal(null)">Закрыть</p>`;
                 document.getElementById('download-modal').style.display = 'flex';
             } else { window.open(game.l, '_blank'); }
         }
 
         function closeDownloadModal(e) { if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none'; }
         function toggleMenu() { const sb = document.getElementById('sidebar'); document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none'; }
+        
+        function changeAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => { document.getElementById('user-avatar').src = e.target.result; localStorage.setItem('user_ava', e.target.result); }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function saveName(val) { localStorage.setItem('user_name', val); document.getElementById('display-name').innerText = val; }
 
         window.addEventListener('load', () => {
@@ -247,6 +278,8 @@
             setTheme(theme);
             const name = localStorage.getItem('user_name');
             if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
+            const ava = localStorage.getItem('user_ava');
+            if (ava) document.getElementById('user-avatar').src = ava;
             if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
 
