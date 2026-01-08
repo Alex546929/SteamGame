@@ -3,137 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GameHub Helio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>GameHub Helio | Mixed Styles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0f0c29;
-            --bg-purple: #302b63;
-            --glass: rgba(255, 255, 255, 0.1);
-            --border: rgba(255, 255, 255, 0.2);
-            --accent: #24A1DE;
-            --radius: 15px;
-            --blur: 10px;
-            --glow: rgba(255, 255, 255, 0.3); /* Цвет подсветки */
+            --bg-dark: #05050a;
+            --accent: #00f2ff;
+            --accent-2: #7000ff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --radius-main: 20px;
+            --blur: 12px;
+            --btn-bg: linear-gradient(45deg, var(--accent), var(--accent-2));
+            --font-header: 'Orbitron', sans-serif;
         }
 
-        /* ТЕМА iOS 26 */
         body.theme-ios {
-            --glass: rgba(255, 255, 255, 0.15);
-            --border: rgba(255, 255, 255, 0.3);
-            --radius: 25px;
-            --blur: 30px;
-            --glow: rgba(36, 161, 222, 0.5); /* Голубоватая подсветка для iOS */
+            --radius-main: 28px;
+            --accent: #ffffff;
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --blur: 35px;
+            --btn-bg: rgba(255, 255, 255, 0.15);
+            --text: rgba(255, 255, 255, 0.95);
+            --font-header: 'Montserrat', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, var(--bg-dark), var(--bg-purple));
-            height: 100vh;
-            color: #fff;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: 0.5s ease;
-        }
-
-        /* ЭФФЕКТ ПОДСВЕТКИ ПРИ НАВЕДЕНИИ (ХОВЕР) */
-        .tile, .download-btn, .menu-item, .nav-tab, .theme-btn, .modal-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            cursor: pointer;
-        }
-
-        /* Эффект свечения и увеличения */
-        .tile:hover, .tile.active {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--glow);
-            border-color: #fff !important;
-            opacity: 1 !important;
-            z-index: 10;
-        }
-
-        .download-btn:hover, .modal-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px var(--glow);
-            filter: brightness(1.1);
-        }
-
-        .menu-item:hover {
-            background: var(--border);
-            padding-left: 20px; /* Эффект смещения при наведении */
-            box-shadow: inset 0 0 10px var(--glow);
-        }
-
-        /* СТИЛИ КОНТЕЙНЕРОВ */
-        body.theme-ios .tile, 
-        body.theme-ios .download-btn, 
-        body.theme-ios .nav-tab,
-        body.theme-ios .menu-item,
-        body.theme-ios .modal-content {
-            backdrop-filter: blur(var(--blur));
-            background: var(--glass);
-            border: 1px solid var(--border);
-        }
-
-        /* БОКОВОЕ МЕНЮ */
-        #sidebar {
-            position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
-            background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(25px);
-            z-index: 10000; transition: 0.4s; border-right: 1px solid var(--border);
-            padding: 30px 20px; display: flex; flex-direction: column; gap: 15px;
-        }
-        #sidebar.open { left: 0; }
-
-        .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-        .theme-btn { flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; }
-        .theme-btn.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 10px var(--accent); }
-
-        /* ОКНО ВЫБОРА */
-        #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .modal-content { background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
-        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; }
-
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
-
-        .profile-section { text-align: center; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-        .avatar-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; }
-        #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
-        #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
-
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
-        .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
-
-        /* ГЕЙМПАД-ИНТЕРФЕЙС */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
-        .nav-tab { background: var(--glass); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
-        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
-        .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
-        .games-list::-webkit-scrollbar { display: none; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--bg-dark); height: 100vh; color: var(--text); overflow: hidden; display: flex; flex-direction: column; transition: 0.5s; }
         
-        .tile { width: 110px; height: 150px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; flex-shrink: 0; opacity: 0.6; }
-        .tile.active { width: 140px; height: 190px; opacity: 1; }
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 70% 20%, #1e1e4a, transparent), radial-gradient(circle at 10% 90%, #1a0533, transparent); z-index: -1; }
+
+        /* МЕНЮ */
+        #sidebar { position: fixed; left: -320px; top: 0; width: 300px; height: 100%; background: rgba(10, 10, 20, 0.8); backdrop-filter: blur(var(--blur)); z-index: 10000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--glass-border); padding: 40px 25px; display: flex; flex-direction: column; gap: 15px; }
+        #sidebar.open { left: 0; }
+        .profile-section { text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 25px; }
+        .avatar-wrapper { width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--accent), var(--accent-2)); cursor: pointer; }
+        #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #000; }
+        #user-name { font-family: var(--font-header); font-size: 16px; background: none; border: none; color: var(--text); text-align: center; width: 100%; outline: none; }
+
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .menu-item:hover { background: rgba(255,255,255,0.1); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 25px 30px; }
+        .nav-tab { background: var(--glass); padding: 10px 22px; border-radius: 50px; border: 1px solid var(--glass-border); font-size: 11px; font-weight: 800; letter-spacing: 2px; cursor: pointer; backdrop-filter: blur(var(--blur)); }
+
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 30px; gap: 20px; }
+        .list-wrapper { width: 100%; overflow-x: auto; scrollbar-width: none; padding: 20px 0; }
+        .games-list { display: flex; align-items: center; gap: 20px; width: max-content; }
+
+        /* СТИЛИ ПЛИТОК (ИГРЫ - ВЕРТИКАЛЬНЫЕ) */
+        .tile { 
+            width: 130px; height: 180px; 
+            border-radius: var(--radius-main); overflow: hidden; 
+            border: 2px solid transparent; flex-shrink: 0; opacity: 0.4; 
+            transition: all 0.5s cubic-bezier(0.2, 1, 0.3, 1); filter: grayscale(0.6); 
+        }
+        .tile.active { width: 165px; height: 230px; opacity: 1; filter: grayscale(0); border-color: var(--accent); transform: scale(1.05); }
+
+        /* СТИЛИ ПЛИТОК (ЭМУЛЯТОРЫ - КВАДРАТ 1:1) */
+        body.mode-emus .tile { width: 140px; height: 140px; }
+        body.mode-emus .tile.active { width: 160px; height: 160px; }
+
         .tile img { width: 100%; height: 100%; object-fit: cover; }
 
-        .info { display: flex; flex-direction: column; gap: 8px; }
-        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
+        .info { max-width: 500px; }
+        .info h1 { font-family: var(--font-header); font-size: 36px; margin-bottom: 8px; text-transform: uppercase; }
+        .info p { opacity: 0.7; font-size: 14px; line-height: 1.5; min-height: 45px; margin-bottom: 25px; }
 
-        /* ПОДПИСКА */
-        #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
-        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
-        .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
-        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
+        .btn-group { display: flex; gap: 12px; }
+        .download-btn { display: inline-block; background: var(--btn-bg); color: var(--text); padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 12px; border: 1px solid var(--glass-border); cursor: pointer; transition: 0.3s; }
+        .secondary-btn { background: var(--glass); }
+
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
+        .theme-selector { display: flex; gap: 8px; }
+        .theme-btn { flex: 1; padding: 10px; font-size: 10px; border-radius: 12px; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); cursor: pointer; }
+        .theme-btn.active { background: #fff; color: #000; }
+
+        #subscription-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: none; justify-content: center; align-items: center; }
+        .sub-modal { background: rgba(15,15,30,0.9); width: 90%; max-width: 400px; padding: 40px; border-radius: 30px; text-align: center; border: 1px solid var(--glass-border); backdrop-filter: blur(20px); }
     </style>
 </head>
-<body class="theme-standard">
-
-    <div id="download-modal" onclick="closeDownloadModal(event)">
-        <div class="modal-content" id="modal-content-area"></div>
-    </div>
-
+<body class="theme-standard mode-games">
+    <div class="bg-glow"></div>
     <div id="overlay" onclick="toggleMenu()"></div>
+    
     <div id="sidebar">
         <div class="profile-section">
             <div class="avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
@@ -142,161 +97,151 @@
             <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
             <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
         </div>
-
-        <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Тема оформления:</p>
+        <p style="font-size: 9px; opacity: 0.5; letter-spacing: 2px; margin-left: 10px;">МЕНЮ</p>
+        <div class="menu-item" onclick="switchSection('games')">🎮 ИГРЫ</div>
+        <div class="menu-item" onclick="switchSection('emus')">🕹️ ЭМУЛЯТОРЫ</div>
+        <p style="font-size: 9px; opacity: 0.5; letter-spacing: 2px; margin-top: 10px; margin-left: 10px;">ТЕМА</p>
         <div class="theme-selector">
-            <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">Стандарт</button>
-            <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS 26</button>
+            <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">NEON</button>
+            <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS GLASS</button>
         </div>
-
-        <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
-            <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram
-        </a>
-        <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
-            <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
-        </a>
-        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;"><span>⬅️</span> Назад</div>
+        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.5; justify-content: center; border: none; background: transparent;">ЗАКРЫТЬ</div>
     </div>
 
     <div id="subscription-screen">
         <div class="sub-modal">
-            <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
-            <h2>Привет!</h2>
-            <p style="margin: 15px 0;">Подпишись на наш Telegram!</p>
-            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" onclick="startTimer()">Подписаться</a>
-            <div id="timer-text" style="margin-top:15px; font-size:12px; color: #777;"></div>
+            <h2 id="sub-h">ACCESS LOCKED</h2>
+            <p style="margin: 20px 0; font-size: 14px; opacity: 0.7;">Подпишись на канал для входа.</p>
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="download-btn" style="width: 100%;" onclick="startTimer()">ПОДПИСАТЬСЯ</a>
+            <div id="timer-text" style="margin-top:15px; font-size:11px; font-weight:bold;"></div>
+            <button id="closeBtn" onclick="hideSubscription()" style="display:none; margin-top:15px; background:none; border:none; color:#fff; cursor:pointer; text-decoration:underline;">ВОЙТИ</button>
         </div>
     </div>
 
     <div class="header">
-        <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
-        <div id="status-bar" style="font-size: 13px;">Online 🔋</div>
+        <div class="nav-tab" onclick="toggleMenu()" id="header-title">ИГРЫ</div>
+        <div style="font-size: 10px; font-weight: 800;">HELIO <span id="mode-label" style="color:var(--accent)">PRO</span></div>
     </div>
 
     <div class="container">
-        <div class="games-list">
-            <div class="tile active" onclick="update('gta5', this)"><img src="https://files.catbox.moe/munwwt.jpeg"></div>
-            <div class="tile" onclick="update('sleeping', this)"><img src="https://files.catbox.moe/asugs7.jpeg"></div>
-            <div class="tile" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
-            <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
-            <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
-            <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
-            <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
-            <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
+        <div class="list-wrapper">
+            <div class="games-list" id="main-list"></div>
         </div>
         <div class="info">
-            <h1 id="t">GTA 5</h1>
-            <p id="d" style="font-size: 13px; color: #ccc; height: 40px;">Загрузите легендарную GTA 5 в разных версиях.</p>
-            <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
+            <h1 id="t">---</h1>
+            <p id="d">---</p>
+            <div class="btn-group">
+                <button id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</button>
+                <button id="ext-btn" class="download-btn secondary-btn" style="display:none;" onclick="handleExtra()">СКАЧАТЬ ИГРЫ</button>
+            </div>
         </div>
     </div>
 
     <script>
-        let currentGame = 'gta5';
+        let currentSection = 'games';
+        let currentGame = '';
+
         const gameData = {
-            gta5: {
-                t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе. Выберите версию.", l: "MULTI",
-                versions: [
-                    {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
-                    {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
-                    {n: "47GB (Lite)", u: "https://gofile.io/d/QVTf2B"},
-                    {n: "24GB (Lite)", u: "https://gofile.io/d/pikHJm"},
-                    {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}
-                ]
-            },
-            gta4: {
-                t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "MULTI",
-                versions: [
-                    {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
-                    {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
-                    {n: "7GB (Lite)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"}
-                ]
-            },
-            sleeping: {t: "Sleeping Dogs", d: "Открытый мир и кунг-фу в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
-            stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
-            raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
-            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
-            ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
-            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"}
+            gta5: { t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе.", l: "https://gofile.io/d/8Gvabc", img: "https://files.catbox.moe/munwwt.jpeg" },
+            sleeping: { t: "Sleeping Dogs", d: "Боевик в Гонконге про кунг-фу.", l: "https://buzzheavier.com/jgglyhqzkaqu", img: "https://files.catbox.moe/asugs7.jpeg" },
+            gta4: { t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "https://buzzheavier.com/akft1ubwr2g1", img: "https://files.catbox.moe/sufdhc.webp" },
+            stray: { t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff", img: "https://files.catbox.moe/3aw2tm.jpeg" },
+            raven: { t: "Ravenfield", d: "Тактический шутер с ботами.", l: "https://megadb.net/kw2j7hdqenvy", img: "https://files.catbox.moe/g2zfv4.jpeg" },
+            hitman: { t: "Hitman Absolution", d: "Стелс-экшен про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar", img: "https://files.catbox.moe/6f6e7p.jpg" },
+            ac2: { t: "Assassin's Creed 2", d: "Эпическое путешествие Эцио.", l: "https://buzzheavier.com/7m35lpl1e1od", img: "https://files.catbox.moe/d3fssi.jpg" },
+            brick: { t: "Brick Rigs", d: "Песочница для сборки техники.", l: "https://gofile.io/d/tGx53U", img: "https://files.catbox.moe/jsjxaw.jpeg" }
         };
 
+        const emuData = {
+            ppsspp: { 
+                t: "PPSSPP", 
+                d: "Лучший эмулятор PSP. Запускайте игры Sony Portable в высоком разрешении.", 
+                l: "https://buzzheavier.com/38jujh452nq5", 
+                ext: "https://allfon.net/",
+                img: "https://files.catbox.moe/a616ie.webp" 
+            }
+        };
+
+        function switchSection(sect) {
+            currentSection = sect;
+            document.body.className = document.body.className.replace(/mode-\w+/g, 'mode-' + sect);
+            renderList();
+            toggleMenu();
+            document.getElementById('header-title').innerText = sect === 'games' ? 'ИГРЫ' : 'ЭМУЛЯТОРЫ';
+        }
+
+        function renderList() {
+            const list = document.getElementById('main-list');
+            const data = currentSection === 'games' ? gameData : emuData;
+            list.innerHTML = '';
+            Object.keys(data).forEach((key, index) => {
+                const div = document.createElement('div');
+                div.className = `tile ${index === 0 ? 'active' : ''}`;
+                div.onclick = () => update(key, div);
+                div.innerHTML = `<img src="${data[key].img}">`;
+                list.appendChild(div);
+                if (index === 0) update(key, div);
+            });
+        }
+
+        function update(key, el) {
+            currentGame = key;
+            const data = currentSection === 'games' ? gameData : emuData;
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            const info = document.querySelector('.info');
+            info.style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('t').innerText = data[key].t;
+                document.getElementById('d').innerText = data[key].d;
+                document.getElementById('ext-btn').style.display = data[key].ext ? 'inline-block' : 'none';
+                info.style.opacity = '1';
+            }, 200);
+            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+
+        function handleDownload() {
+            const data = currentSection === 'games' ? gameData : emuData;
+            window.open(data[currentGame].l, '_blank');
+        }
+
+        function handleExtra() {
+            const data = currentSection === 'games' ? gameData : emuData;
+            if (data[currentGame].ext) window.open(data[currentGame].ext, '_blank');
+        }
+
         function setTheme(theme) {
-            document.body.className = 'theme-' + theme;
+            const currentMode = currentSection;
+            document.body.className = 'theme-' + theme + ' mode-' + currentMode;
             document.getElementById('btn-std').classList.toggle('active', theme === 'standard');
             document.getElementById('btn-ios').classList.toggle('active', theme === 'ios');
             localStorage.setItem('user_theme', theme);
         }
 
-        function update(key, el) {
-            currentGame = key;
-            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('t').innerText = gameData[key].t;
-            document.getElementById('d').innerText = gameData[key].d;
-            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-        }
-
-        function handleDownload() {
-            const game = gameData[currentGame];
-            if (game.l === "MULTI") {
-                const area = document.getElementById('modal-content-area');
-                area.innerHTML = `<h3>Выбор версии</h3>`;
-                game.versions.forEach(v => area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`);
-                area.innerHTML += `<p style="margin-top:15px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
-                document.getElementById('download-modal').style.display = 'flex';
-            } else { window.open(game.l, '_blank'); }
-        }
-
-        function closeDownloadModal(e) {
-            if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none';
-        }
-
-        function toggleMenu() {
-            const sb = document.getElementById('sidebar');
-            document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none';
-        }
-
-        function changeAvatar(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.getElementById('user-avatar').src = e.target.result;
-                    localStorage.setItem('user_ava', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        function saveName(val) {
-            localStorage.setItem('user_name', val);
-            document.getElementById('display-name').innerText = val;
-        }
+        function toggleMenu() { const sb = document.getElementById('sidebar'); document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none'; }
+        function changeAvatar(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = (e) => { document.getElementById('user-avatar').src = e.target.result; localStorage.setItem('user_ava', e.target.result); }; reader.readAsDataURL(input.files[0]); } }
+        function saveName(val) { localStorage.setItem('user_name', val); }
 
         window.addEventListener('load', () => {
             const name = localStorage.getItem('user_name');
             const ava = localStorage.getItem('user_ava');
             const theme = localStorage.getItem('user_theme') || 'standard';
-            if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
+            if (name) document.getElementById('user-name').value = name;
             if (ava) document.getElementById('user-avatar').src = ava;
             setTheme(theme);
+            renderList();
             if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
 
-        let timerStarted = false;
         function startTimer() {
-            if (timerStarted) return;
-            timerStarted = true;
             let sec = 8;
+            const timerTxt = document.getElementById('timer-text');
             const inv = setInterval(() => {
-                document.getElementById('timer-text').innerText = "Крестик появится через " + sec + "...";
-                if (sec-- <= 0) { clearInterval(inv); document.getElementById('closeBtn').style.display = 'block'; }
+                timerTxt.innerText = "ПРОВЕРКА: " + sec + "с";
+                if (sec-- <= 0) { clearInterval(inv); timerTxt.innerText = "ГОТОВО"; document.getElementById('closeBtn').style.display = 'block'; }
             }, 1000);
         }
-
-        function hideSubscription() {
-            localStorage.setItem('sub_hidden', 'true');
-            document.getElementById('subscription-screen').style.display = 'none';
-        }
+        function hideSubscription() { localStorage.setItem('sub_hidden', 'true'); document.getElementById('subscription-screen').style.display = 'none'; }
     </script>
 </body>
 </html>
