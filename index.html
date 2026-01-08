@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GameHub Helio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #0f0c29;
@@ -14,7 +14,7 @@
             --accent: #24A1DE;
             --radius: 15px;
             --blur: 10px;
-            --glow: rgba(255, 255, 255, 0.3);
+            --glow: rgba(255, 255, 255, 0.3); /* Цвет подсветки */
         }
 
         /* ТЕМА iOS 26 */
@@ -23,16 +23,7 @@
             --border: rgba(255, 255, 255, 0.3);
             --radius: 25px;
             --blur: 30px;
-            --glow: rgba(36, 161, 222, 0.5);
-        }
-
-        /* ТЕМА PSP (XMB STYLE) */
-        body.theme-psp {
-            --bg-dark: #003791;
-            --bg-purple: #001d4d;
-            --radius: 5px;
-            --accent: #fff;
-            --glow: rgba(255, 255, 255, 0.6);
+            --glow: rgba(36, 161, 222, 0.5); /* Голубоватая подсветка для iOS */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -48,21 +39,14 @@
             transition: 0.5s ease;
         }
 
-        /* PSP СПЕЦИФИЧНЫЕ ИЗМЕНЕНИЯ */
-        body.theme-psp .header { justify-content: flex-start; gap: 30px; padding: 40px 50px; }
-        body.theme-psp .nav-tab { background: none; border: none; font-size: 16px; opacity: 0.6; text-transform: uppercase; letter-spacing: 2px; }
-        body.theme-psp .nav-tab.active-psp { opacity: 1; transform: scale(1.2); }
-        body.theme-psp .container { justify-content: flex-start; padding-top: 50px; padding-left: 50px; }
-        body.theme-psp .tile { width: 200px; height: 110px; border-radius: 4px; }
-        body.theme-psp .tile.active { width: 240px; height: 135px; border: 3px solid #fff; }
-
-        /* ЭФФЕКТЫ */
+        /* ЭФФЕКТ ПОДСВЕТКИ ПРИ НАВЕДЕНИИ (ХОВЕР) */
         .tile, .download-btn, .menu-item, .nav-tab, .theme-btn, .modal-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             cursor: pointer;
         }
 
+        /* Эффект свечения и увеличения */
         .tile:hover, .tile.active {
             transform: scale(1.05);
             box-shadow: 0 0 20px var(--glow);
@@ -71,7 +55,30 @@
             z-index: 10;
         }
 
-        /* SIDEBAR */
+        .download-btn:hover, .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--glow);
+            filter: brightness(1.1);
+        }
+
+        .menu-item:hover {
+            background: var(--border);
+            padding-left: 20px; /* Эффект смещения при наведении */
+            box-shadow: inset 0 0 10px var(--glow);
+        }
+
+        /* СТИЛИ КОНТЕЙНЕРОВ */
+        body.theme-ios .tile, 
+        body.theme-ios .download-btn, 
+        body.theme-ios .nav-tab,
+        body.theme-ios .menu-item,
+        body.theme-ios .modal-content {
+            backdrop-filter: blur(var(--blur));
+            background: var(--glass);
+            border: 1px solid var(--border);
+        }
+
+        /* БОКОВОЕ МЕНЮ */
         #sidebar {
             position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
             background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(25px);
@@ -80,14 +87,14 @@
         }
         #sidebar.open { left: 0; }
 
-        .theme-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .theme-btn { padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; }
+        .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .theme-btn { flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; }
         .theme-btn.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 10px var(--accent); }
 
-        /* MODAL */
+        /* ОКНО ВЫБОРА */
         #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .modal-content { background: rgba(26, 26, 46, 0.9); width: 90%; max-width: 380px; max-height: 80vh; overflow-y: auto; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
-        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 13px; }
+        .modal-content { background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
+        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; }
 
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
 
@@ -97,10 +104,10 @@
         #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
 
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
-        .menu-icon { width: 25px; height: 25px; border-radius: 50%; object-fit: cover; }
+        .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
 
-        /* MAIN UI */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; z-index: 100; }
+        /* ГЕЙМПАД-ИНТЕРФЕЙС */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
         .nav-tab { background: var(--glass); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
         .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
@@ -111,16 +118,9 @@
         .tile img { width: 100%; height: 100%; object-fit: cover; }
 
         .info { display: flex; flex-direction: column; gap: 8px; }
-        .game-title-psp { font-size: 32px; font-weight: 300; text-transform: uppercase; letter-spacing: 3px; display: none; }
-        body.theme-psp .game-title-psp { display: block; }
-        body.theme-psp #t { display: none; }
-
         .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
 
-        .psp-btn-icon { display: none; width: 20px; height: 20px; border: 2px solid #fff; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; }
-        body.theme-psp .psp-btn-icon { display: inline-flex; }
-
-        /* SUBSCRIPTION */
+        /* ПОДПИСКА */
         #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
         .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
         .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
@@ -147,7 +147,6 @@
         <div class="theme-selector">
             <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">Стандарт</button>
             <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS 26</button>
-            <button class="theme-btn" id="btn-psp" onclick="setTheme('psp')" style="grid-column: span 2;">PSP Classic</button>
         </div>
 
         <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
@@ -156,7 +155,7 @@
         <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
             <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
         </a>
-        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;"><span class="psp-btn-icon" style="border-color:#ff3a3a; color:#ff3a3a">O</span> Назад</div>
+        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;"><span>⬅️</span> Назад</div>
     </div>
 
     <div id="subscription-screen">
@@ -170,9 +169,8 @@
     </div>
 
     <div class="header">
-        <div class="nav-tab" onclick="toggleMenu()" id="psp-profile-tab">👤 <b id="display-name">Moe</b></div>
-        <div class="nav-tab active-psp" id="psp-games-tab">🎮 Игры</div>
-        <div id="status-bar" style="font-size: 13px; margin-left: auto;">Online 🔋</div>
+        <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
+        <div id="status-bar" style="font-size: 13px;">Online 🔋</div>
     </div>
 
     <div class="container">
@@ -188,44 +186,35 @@
         </div>
         <div class="info">
             <h1 id="t">GTA 5</h1>
-            <h1 class="game-title-psp" id="t-psp">GTA 5</h1>
             <p id="d" style="font-size: 13px; color: #ccc; height: 40px;">Загрузите легендарную GTA 5 в разных версиях.</p>
-            <div id="l" class="download-btn" onclick="handleDownload()">
-                <span class="psp-btn-icon" style="border-color:#3ae2ff; color:#3ae2ff">X</span>СКАЧАТЬ
-            </div>
+            <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
         </div>
     </div>
 
     <script>
         let currentGame = 'gta5';
-        let timerStarted = false;
-
         const gameData = {
             gta5: {
-                t: "GTA 5", 
-                d: "Легендарный экшен. Доступно 5 версий (от Lite до Full).", 
-                l: "MULTI",
+                t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе. Выберите версию.", l: "MULTI",
                 versions: [
-                    {n: "10GB (Ultra Lite) - GoFile", u: "https://gofile.io/d/8Gvabc"},
-                    {n: "12GB (Ultra Lite) - Buzz", u: "https://buzzheavier.com/p5gy6hp2jiup"},
-                    {n: "24GB (Lite) - GoFile", u: "https://gofile.io/d/pikHJm"},
-                    {n: "47GB (Lite) - GoFile", u: "https://gofile.io/d/QVTf2B"},
-                    {n: "100GB (Full Original)", u: "https://buzzheavier.com/rkksxkwu6kef"}
+                    {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
+                    {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
+                    {n: "47GB (Lite)", u: "https://gofile.io/d/QVTf2B"},
+                    {n: "24GB (Lite)", u: "https://gofile.io/d/pikHJm"},
+                    {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}
                 ]
             },
             gta4: {
-                t: "GTA 4", 
-                d: "История Нико Беллика. Доступно 3 версии.", 
-                l: "MULTI",
+                t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "MULTI",
                 versions: [
-                    {n: "4GB (Super Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
-                    {n: "7GB (Lite Repack)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"},
-                    {n: "20GB (Full Complete)", u: "https://buzzheavier.com/akft1ubwr2g1"}
+                    {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
+                    {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
+                    {n: "7GB (Lite)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"}
                 ]
             },
             sleeping: {t: "Sleeping Dogs", d: "Открытый мир и кунг-фу в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
             stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
-            raven: {t: "Ravenfield", d: "Шутер с ботами.", l: "https://megadb.net/kw2j7hdqenvy"},
+            raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
             hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
             ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
             brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"}
@@ -235,7 +224,6 @@
             document.body.className = 'theme-' + theme;
             document.getElementById('btn-std').classList.toggle('active', theme === 'standard');
             document.getElementById('btn-ios').classList.toggle('active', theme === 'ios');
-            document.getElementById('btn-psp').classList.toggle('active', theme === 'psp');
             localStorage.setItem('user_theme', theme);
         }
 
@@ -244,7 +232,6 @@
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
             document.getElementById('t').innerText = gameData[key].t;
-            document.getElementById('t-psp').innerText = gameData[key].t;
             document.getElementById('d').innerText = gameData[key].d;
             el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
@@ -255,34 +242,47 @@
                 const area = document.getElementById('modal-content-area');
                 area.innerHTML = `<h3>Выбор версии</h3>`;
                 game.versions.forEach(v => area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`);
-                area.innerHTML += `<p style="margin-top:15px; cursor:pointer; color:#aaa; font-size:12px;" onclick="closeDownloadModal(null)">Закрыть</p>`;
+                area.innerHTML += `<p style="margin-top:15px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
                 document.getElementById('download-modal').style.display = 'flex';
             } else { window.open(game.l, '_blank'); }
         }
 
-        function closeDownloadModal(e) { if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none'; }
-        function toggleMenu() { const sb = document.getElementById('sidebar'); document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none'; }
-        
+        function closeDownloadModal(e) {
+            if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none';
+        }
+
+        function toggleMenu() {
+            const sb = document.getElementById('sidebar');
+            document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none';
+        }
+
         function changeAvatar(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => { document.getElementById('user-avatar').src = e.target.result; localStorage.setItem('user_ava', e.target.result); }
+                reader.onload = (e) => {
+                    document.getElementById('user-avatar').src = e.target.result;
+                    localStorage.setItem('user_ava', e.target.result);
+                }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        function saveName(val) { localStorage.setItem('user_name', val); document.getElementById('display-name').innerText = val; }
+        function saveName(val) {
+            localStorage.setItem('user_name', val);
+            document.getElementById('display-name').innerText = val;
+        }
 
         window.addEventListener('load', () => {
-            const theme = localStorage.getItem('user_theme') || 'standard';
-            setTheme(theme);
             const name = localStorage.getItem('user_name');
-            if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
             const ava = localStorage.getItem('user_ava');
+            const theme = localStorage.getItem('user_theme') || 'standard';
+            if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
             if (ava) document.getElementById('user-avatar').src = ava;
+            setTheme(theme);
             if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
         });
 
+        let timerStarted = false;
         function startTimer() {
             if (timerStarted) return;
             timerStarted = true;
@@ -292,7 +292,11 @@
                 if (sec-- <= 0) { clearInterval(inv); document.getElementById('closeBtn').style.display = 'block'; }
             }, 1000);
         }
-        function hideSubscription() { localStorage.setItem('sub_hidden', 'true'); document.getElementById('subscription-screen').style.display = 'none'; }
+
+        function hideSubscription() {
+            localStorage.setItem('sub_hidden', 'true');
+            document.getElementById('subscription-screen').style.display = 'none';
+        }
     </script>
 </body>
 </html>
