@@ -36,15 +36,16 @@
         .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 70% 20%, #1e1e4a, transparent), radial-gradient(circle at 10% 90%, #1a0533, transparent); z-index: -1; }
 
         /* МЕНЮ */
-        #sidebar { position: fixed; left: -320px; top: 0; width: 300px; height: 100%; background: rgba(10, 10, 20, 0.85); backdrop-filter: blur(var(--blur)); z-index: 10000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--glass-border); padding: 40px 25px; display: flex; flex-direction: column; gap: 15px; }
+        #sidebar { position: fixed; left: -320px; top: 0; width: 300px; height: 100%; background: rgba(10, 10, 20, 0.9); backdrop-filter: blur(var(--blur)); z-index: 10000; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--glass-border); padding: 40px 25px; display: flex; flex-direction: column; gap: 10px; }
         #sidebar.open { left: 0; box-shadow: 20px 0 80px rgba(0,0,0,0.8); }
-        .profile-section { text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 25px; }
+        .profile-section { text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 25px; margin-bottom: 10px; }
         .avatar-wrapper { width: 80px; height: 80px; margin: 0 auto 15px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, var(--accent), var(--accent-2)); cursor: pointer; }
         #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #000; }
         #user-name { font-family: var(--font-header); font-size: 16px; background: none; border: none; color: var(--text); text-align: center; width: 100%; outline: none; }
 
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .menu-item:hover { background: rgba(255,255,255,0.1); }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.3s; text-decoration: none; }
+        .menu-item:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); border-color: var(--accent); }
+        .menu-item.active { background: var(--accent); color: #000; }
 
         /* ИКОНКИ */
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 30px; gap: 20px; }
@@ -61,32 +62,37 @@
         .info p { opacity: 0.7; font-size: 14px; line-height: 1.5; min-height: 45px; margin-bottom: 25px; }
 
         /* КНОПКИ */
-        .download-btn { display: inline-block; background: var(--btn-bg); color: var(--text); padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 12px; border: 1px solid var(--glass-border); cursor: pointer; transition: 0.3s; }
+        .download-btn { display: inline-block; background: var(--btn-bg); color: var(--text); padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 800; font-size: 11px; letter-spacing: 1px; border: 1px solid var(--glass-border); cursor: pointer; transition: 0.3s; text-align: center; }
         .secondary-btn { background: var(--glass); margin-left: 10px; }
 
-        /* МОДАЛЬНОЕ ОКНО (ВЫБОР ВЕРСИЙ) */
-        #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
-        .modal-content { background: var(--glass); width: 90%; max-width: 400px; padding: 30px; border-radius: var(--radius-main); border: 1px solid var(--glass-border); text-align: center; backdrop-filter: blur(var(--blur)); }
-        .modal-title { font-family: var(--font-header); margin-bottom: 20px; font-size: 18px; }
+        /* МОДАЛКИ */
+        #download-modal, #subscription-screen { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .modal-content, .sub-modal { background: var(--glass); width: 90%; max-width: 400px; padding: 30px; border-radius: var(--radius-main); border: 1px solid var(--glass-border); text-align: center; backdrop-filter: blur(var(--blur)); }
         .ver-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text); text-decoration: none; border-radius: 15px; font-weight: 700; transition: 0.2s; }
         .ver-btn:hover { background: var(--accent); color: #000; }
-        
-        body.theme-ios .ver-btn { background: rgba(255,255,255,0.1); border-radius: 20px; }
-        body.theme-ios .ver-btn:hover { background: rgba(255,255,255,0.3); color: #fff; }
 
         #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
-        #subscription-screen { position: fixed; inset: 0; background: #000; z-index: 99999; display: none; justify-content: center; align-items: center; }
     </style>
 </head>
 <body class="theme-standard mode-games">
     <div class="bg-glow"></div>
     <div id="overlay" onclick="toggleMenu()"></div>
 
+    <div id="subscription-screen">
+        <div class="sub-modal">
+            <h2 id="lang-sub-lock" style="font-family: var(--font-header); font-size: 20px;">ACCESS LOCKED</h2>
+            <p id="lang-sub-text" style="margin: 20px 0; font-size: 14px; opacity: 0.7;">Подпишитесь на наш Telegram канал, чтобы разблокировать доступ.</p>
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="download-btn" id="lang-sub-btn" style="width: 100%;" onclick="startTimer()">ПОДПИСАТЬСЯ</a>
+            <div id="timer-text" style="margin-top:15px; font-size:11px; font-weight:bold;"></div>
+            <button id="closeBtn" onclick="hideSubscription()" style="display:none; margin-top:20px; background:none; border:none; color:var(--accent); cursor:pointer; font-weight: 800; text-transform: uppercase;">ENTER</button>
+        </div>
+    </div>
+
     <div id="download-modal" onclick="closeModal(event)">
         <div class="modal-content">
-            <div class="modal-title">ВЫБЕРИТЕ ВЕРСИЮ</div>
+            <div id="lang-ver-title" style="font-family: var(--font-header); margin-bottom: 20px;">ВЫБЕРИТЕ ВЕРСИЮ</div>
             <div id="ver-list"></div>
-            <p onclick="closeModal(null)" style="cursor:pointer; opacity:0.5; margin-top:15px; font-size:12px;">ОТМЕНА</p>
+            <p id="lang-cancel" onclick="closeModal(null)" style="cursor:pointer; opacity:0.5; margin-top:15px; font-size:12px;">ОТМЕНА</p>
         </div>
     </div>
     
@@ -96,12 +102,21 @@
                 <img id="user-avatar" src="https://via.placeholder.com/80">
             </div>
             <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
-            <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
+            <input type="text" id="user-name" value="User" onchange="saveName(this.value)">
         </div>
-        <div class="menu-item" onclick="switchSection('games')">🎮 ИГРЫ</div>
-        <div class="menu-item" onclick="switchSection('emus')">🕹️ ЭМУЛЯТОРЫ</div>
-        <p style="font-size: 9px; opacity: 0.5; margin: 10px 0 5px 10px;">СТИЛЬ</p>
-        <div style="display:flex; gap:5px; padding:0 10px;">
+        
+        <div class="menu-item" onclick="switchSection('games')" id="lang-m-games">🎮 ИГРЫ</div>
+        <div class="menu-item" onclick="switchSection('emus')" id="lang-m-emus">🕹️ ЭМУЛЯТОРЫ</div>
+        <a href="https://t.me/Helio_Hub" target="_blank" class="menu-item" id="lang-m-dev">👨‍💻 РАЗРАБОТЧИК</a>
+        
+        <p style="font-size: 9px; opacity: 0.5; margin: 10px 0 5px 10px; letter-spacing: 1px;" id="lang-m-lang">ЯЗЫК / LANGUAGE</p>
+        <div style="display:flex; gap:5px; padding:0 5px;">
+            <button class="menu-item" style="flex:1; justify-content:center;" id="lang-btn-ru" onclick="setLang('ru')">RU</button>
+            <button class="menu-item" style="flex:1; justify-content:center;" id="lang-btn-en" onclick="setLang('en')">EN</button>
+        </div>
+
+        <p style="font-size: 9px; opacity: 0.5; margin: 10px 0 5px 10px; letter-spacing: 1px;" id="lang-m-style">СТИЛЬ / STYLE</p>
+        <div style="display:flex; gap:5px; padding:0 5px;">
             <button class="menu-item" style="flex:1; justify-content:center;" onclick="setTheme('standard')">NEON</button>
             <button class="menu-item" style="flex:1; justify-content:center;" onclick="setTheme('ios')">iOS</button>
         </div>
@@ -109,7 +124,7 @@
 
     <div class="header" style="display:flex; justify-content:space-between; padding:25px 30px; align-items:center;">
         <div class="nav-tab" onclick="toggleMenu()" id="header-title">ИГРЫ</div>
-        <div style="font-size:10px; font-weight:800;">HELIO <span style="color:var(--accent)">PRO</span></div>
+        <div style="font-size:10px; font-weight:800; letter-spacing: 1px;">HELIO <span style="color:var(--accent)">PRO</span></div>
     </div>
 
     <div class="container">
@@ -120,49 +135,75 @@
             <h1 id="t">---</h1>
             <p id="d">---</p>
             <div style="display:flex; align-items:center;">
-                <button id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</button>
-                <button id="ext-btn" class="download-btn secondary-btn" style="display:none;" onclick="handleExtra()">СКАЧАТЬ ИГРЫ</button>
+                <button id="lang-dl-btn" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</button>
+                <button id="ext-btn" class="download-btn secondary-btn" style="display:none;" onclick="handleExtra()">ИГРЫ</button>
             </div>
         </div>
     </div>
 
     <script>
-        let currentSection = 'games';
-        let currentGame = '';
+        let currentSection = 'games', currentGame = '', currentLang = 'ru';
+
+        const translations = {
+            ru: {
+                m_games: "🎮 ИГРЫ", m_emus: "🕹️ ЭМУЛЯТОРЫ", m_dev: "👨‍💻 РАЗРАБОТЧИК",
+                m_lang: "ЯЗЫК", m_style: "СТИЛЬ", dl_btn: "СКАЧАТЬ", ext_btn: "ИГРЫ",
+                sub_lock: "ДОСТУП ОГРАНИЧЕН", sub_text: "Подпишитесь на наш Telegram канал для входа.",
+                sub_btn: "ПОДПИСАТЬСЯ", cancel: "ОТМЕНА", ver_title: "ВЫБЕРИТЕ ВЕРСИЮ",
+                check: "ПРОВЕРКА: ", done: "ГОТОВО", enter: "ВОЙТИ"
+            },
+            en: {
+                m_games: "🎮 GAMES", m_emus: "🕹️ EMULATORS", m_dev: "👨‍💻 DEVELOPER",
+                m_lang: "LANGUAGE", m_style: "STYLE", dl_btn: "DOWNLOAD", ext_btn: "GAMES",
+                sub_lock: "ACCESS LOCKED", sub_text: "Subscribe to our Telegram channel to unlock.",
+                sub_btn: "SUBSCRIBE", cancel: "CANCEL", ver_title: "SELECT VERSION",
+                check: "CHECKING: ", done: "DONE", enter: "ENTER"
+            }
+        };
 
         const gameData = {
             gta5: { 
-                t: "GTA 5", d: "Легендарный экшен. Выберите подходящую версию.", img: "https://files.catbox.moe/munwwt.jpeg",
-                v: [
-                    {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
-                    {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
-                    {n: "47GB (Lite)", u: "https://gofile.io/d/QVTf2B"},
-                    {n: "24GB (Lite)", u: "https://gofile.io/d/pikHJm"},
-                    {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}
-                ]
+                t: {ru: "GTA 5", en: "GTA 5"}, d: {ru: "Легендарный экшен в Лос-Сантосе.", en: "Legendary action in Los Santos."}, img: "https://files.catbox.moe/munwwt.jpeg",
+                v: [{n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"}, {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}]
             },
             gta4: { 
-                t: "GTA 4", d: "Мрачный Либерти-Сити и история Нико Беллика.", img: "https://files.catbox.moe/sufdhc.webp",
-                v: [
-                    {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
-                    {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
-                    {n: "7GB (Lite)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"}
-                ]
+                t: {ru: "GTA 4", en: "GTA 4"}, d: {ru: "История Нико Беллика в Либерти-Сити.", en: "Niko Bellic's story in Liberty City."}, img: "https://files.catbox.moe/sufdhc.webp",
+                v: [{n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"}, {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"}]
             },
-            sleeping: { t: "Sleeping Dogs", d: "Разборки банд в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu", img: "https://files.catbox.moe/asugs7.jpeg" },
-            stray: { t: "Stray", d: "Приключение кота.", l: "https://buzzheavier.com/l4qu35mx12ff", img: "https://files.catbox.moe/3aw2tm.jpeg" },
-            raven: { t: "Ravenfield", d: "Симулятор войны с ботами.", l: "https://megadb.net/kw2j7hdqenvy", img: "https://files.catbox.moe/g2zfv4.jpeg" },
-            hitman: { t: "Hitman Absolution", d: "Стелс Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar", img: "https://files.catbox.moe/6f6e7p.jpg" },
-            ac2: { t: "Assassin's Creed 2", d: "Эцио в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od", img: "https://files.catbox.moe/d3fssi.jpg" },
-            brick: { t: "Brick Rigs", d: "Песочница LEGO.", l: "https://gofile.io/d/tGx53U", img: "https://files.catbox.moe/jsjxaw.jpeg" }
+            sleeping: { t: {ru: "Sleeping Dogs", en: "Sleeping Dogs"}, d: {ru: "Разборки банд в Гонконге.", en: "Triad wars in Hong Kong."}, l: "https://buzzheavier.com/jgglyhqzkaqu", img: "https://files.catbox.moe/asugs7.jpeg" },
+            stray: { t: {ru: "Stray", en: "Stray"}, d: {ru: "Приключение кота в мире роботов.", en: "Cat adventure in a robot world."}, l: "https://buzzheavier.com/l4qu35mx12ff", img: "https://files.catbox.moe/3aw2tm.jpeg" },
+            raven: { t: {ru: "Ravenfield", en: "Ravenfield"}, d: {ru: "Тактический шутер с ботами.", en: "Tactical shooter with bots."}, l: "https://megadb.net/kw2j7hdqenvy", img: "https://files.catbox.moe/g2zfv4.jpeg" },
+            hitman: { t: {ru: "Hitman Absolution", en: "Hitman Absolution"}, d: {ru: "Стелс Агента 47.", en: "Agent 47 Stealth."}, l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar", img: "https://files.catbox.moe/6f6e7p.jpg" }
         };
 
         const emuData = {
-            ppsspp: { 
-                t: "PPSSPP", d: "Эмулятор PSP для Android и ПК.", 
-                l: "https://buzzheavier.com/38jujh452nq5", ext: "https://allfon.net/", img: "https://files.catbox.moe/a616ie.webp" 
-            }
+            ppsspp: { t: {ru: "PPSSPP", en: "PPSSPP"}, d: {ru: "Эмулятор PSP для Android.", en: "PSP Emulator for Android."}, l: "https://buzzheavier.com/38jujh452nq5", ext: "https://allfon.net/", img: "https://files.catbox.moe/a616ie.webp" }
         };
+
+        function setLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.getElementById('lang-btn-ru').classList.toggle('active', lang === 'ru');
+            document.getElementById('lang-btn-en').classList.toggle('active', lang === 'en');
+            
+            const l = translations[lang];
+            document.getElementById('lang-m-games').innerText = l.m_games;
+            document.getElementById('lang-m-emus').innerText = l.m_emus;
+            document.getElementById('lang-m-dev').innerText = l.m_dev;
+            document.getElementById('lang-m-lang').innerText = lang === 'ru' ? "ЯЗЫК" : "LANGUAGE";
+            document.getElementById('lang-m-style').innerText = lang === 'ru' ? "СТИЛЬ" : "STYLE";
+            document.getElementById('lang-dl-btn').innerText = l.dl_btn;
+            document.getElementById('ext-btn').innerText = l.ext_btn;
+            document.getElementById('lang-sub-lock').innerText = l.sub_lock;
+            document.getElementById('lang-sub-text').innerText = l.sub_text;
+            document.getElementById('lang-sub-btn').innerText = l.sub_btn;
+            document.getElementById('lang-ver-title').innerText = l.ver_title;
+            document.getElementById('lang-cancel').innerText = l.cancel;
+            document.getElementById('closeBtn').innerText = l.enter;
+            
+            update(currentGame, document.querySelector('.tile.active'));
+            document.getElementById('header-title').innerText = currentSection === 'games' ? l.m_games.split(' ')[1] : l.m_emus.split(' ')[1];
+        }
 
         function switchSection(sect) {
             currentSection = sect;
@@ -170,7 +211,7 @@
             document.body.classList.add('mode-' + sect);
             renderList();
             toggleMenu();
-            document.getElementById('header-title').innerText = sect === 'games' ? 'ИГРЫ' : 'ЭМУЛЯТОРЫ';
+            setLang(currentLang);
         }
 
         function renderList() {
@@ -188,14 +229,14 @@
         }
 
         function update(key, el) {
+            if(!key || !el) return;
             currentGame = key;
             const data = currentSection === 'games' ? gameData : emuData;
             document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('t').innerText = data[key].t;
-            document.getElementById('d').innerText = data[key].d;
+            document.getElementById('t').innerText = data[key].t[currentLang];
+            document.getElementById('d').innerText = data[key].d[currentLang];
             document.getElementById('ext-btn').style.display = data[key].ext ? 'inline-block' : 'none';
-            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
 
         function handleDownload() {
@@ -204,15 +245,28 @@
             if (item.v) {
                 const container = document.getElementById('ver-list');
                 container.innerHTML = '';
-                item.v.forEach(ver => {
-                    container.innerHTML += `<a href="${ver.u}" class="ver-btn" target="_blank">${ver.n}</a>`;
-                });
+                item.v.forEach(ver => { container.innerHTML += `<a href="${ver.u}" class="ver-btn" target="_blank">${ver.n}</a>`; });
                 document.getElementById('download-modal').style.display = 'flex';
-            } else {
-                window.open(item.l, '_blank');
-            }
+            } else { window.open(item.l, '_blank'); }
         }
 
+        let timerStarted = false;
+        function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
+            let sec = 8;
+            const timerTxt = document.getElementById('timer-text');
+            const inv = setInterval(() => {
+                timerTxt.innerText = translations[currentLang].check + sec + "s";
+                if (sec-- <= 0) {
+                    clearInterval(inv);
+                    timerTxt.innerText = translations[currentLang].done;
+                    document.getElementById('closeBtn').style.display = 'block';
+                }
+            }, 1000);
+        }
+
+        function hideSubscription() { localStorage.setItem('sub_done', 'true'); document.getElementById('subscription-screen').style.display = 'none'; }
         function closeModal(e) { if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none'; }
         function handleExtra() { window.open(emuData[currentGame].ext, '_blank'); }
         function toggleMenu() { const sb = document.getElementById('sidebar'); document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none'; }
@@ -221,11 +275,13 @@
         function saveName(v) { localStorage.setItem('name', v); }
 
         window.onload = () => {
-            const theme = localStorage.getItem('theme') || 'standard';
-            setTheme(theme);
+            currentLang = localStorage.getItem('lang') || 'ru';
+            setTheme(localStorage.getItem('theme') || 'standard');
             if (localStorage.getItem('name')) document.getElementById('user-name').value = localStorage.getItem('name');
             if (localStorage.getItem('ava')) document.getElementById('user-avatar').src = localStorage.getItem('ava');
             renderList();
+            setLang(currentLang);
+            if (!localStorage.getItem('sub_done')) document.getElementById('subscription-screen').style.display = 'flex';
         };
     </script>
 </body>
