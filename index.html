@@ -3,285 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PSP XMB GameHub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>GameHub Helio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-psp: #003791;
-            --accent: #fff;
-            --glow: rgba(255, 255, 255, 0.4);
-            --font-main: 'Roboto', sans-serif;
+            --bg-dark: #0f0c29;
+            --bg-purple: #302b63;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.2);
+            --accent: #24A1DE;
+            --radius: 15px;
+            --blur: 10px;
+            --glow: rgba(255, 255, 255, 0.3); /* Цвет подсветки */
+        }
+
+        /* ТЕМА iOS 26 */
+        body.theme-ios {
+            --glass: rgba(255, 255, 255, 0.15);
+            --border: rgba(255, 255, 255, 0.3);
+            --radius: 25px;
+            --blur: 30px;
+            --glow: rgba(36, 161, 222, 0.5); /* Голубоватая подсветка для iOS */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: var(--font-main);
-            background: var(--bg-psp);
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark), var(--bg-purple));
             height: 100vh;
             color: #fff;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: background 0.5s ease;
+            transition: 0.5s ease;
         }
 
-        /* АНИМИРОВАННЫЙ ФОН PSP WAVES */
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-            z-index: -1;
-        }
-
-        /* XMB ХЕЙДЕР (Категории) */
-        .xmb-nav {
-            display: flex;
-            gap: 40px;
-            padding: 40px 60px 20px;
-            align-items: center;
-        }
-
-        .nav-item {
-            opacity: 0.5;
-            transition: 0.3s;
+        /* ЭФФЕКТ ПОДСВЕТКИ ПРИ НАВЕДЕНИИ (ХОВЕР) */
+        .tile, .download-btn, .menu-item, .nav-tab, .theme-btn, .modal-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
         }
 
-        .nav-item.active {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-
-        .nav-icon {
-            width: 32px;
-            height: 32px;
-            fill: #fff;
-        }
-
-        /* КОНТЕНТНАЯ ЗОНА */
-        .content-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-left: 60px;
-            position: relative;
-        }
-
-        /* СПИСОК ИГР (Вертикальный или Горизонтальный) */
-        .games-list {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 20px 0;
-            scrollbar-width: none;
-        }
-        .games-list::-webkit-scrollbar { display: none; }
-
-        .tile {
-            width: 180px;
-            height: 100px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 2px solid transparent;
-            transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            position: relative;
-        }
-
-        .tile img { width: 100%; height: 100%; object-fit: cover; }
-
-        .tile.active {
-            transform: scale(1.15) translateX(10px);
-            border-color: #fff;
+        /* Эффект свечения и увеличения */
+        .tile:hover, .tile.active {
+            transform: scale(1.05);
             box-shadow: 0 0 20px var(--glow);
+            border-color: #fff !important;
+            opacity: 1 !important;
             z-index: 10;
         }
 
-        /* ИНФО О ВЫБРАННОМ ОБЪЕКТЕ */
-        .info-box {
-            margin-top: 30px;
-            animation: fadeIn 0.5s ease;
+        .download-btn:hover, .modal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--glow);
+            filter: brightness(1.1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .game-title { font-size: 32px; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; }
-        .game-desc { font-size: 14px; opacity: 0.8; margin: 10px 0; max-width: 400px; }
-
-        /* КНОПКА СКАЧАТЬ (КРЕСТИК) */
-        .psp-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255,255,255,0.15);
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.3);
-            margin-top: 15px;
+        .menu-item:hover {
+            background: var(--border);
+            padding-left: 20px; /* Эффект смещения при наведении */
+            box-shadow: inset 0 0 10px var(--glow);
         }
 
-        /* БОКОВОЕ МЕНЮ (МОЕ) */
+        /* СТИЛИ КОНТЕЙНЕРОВ */
+        body.theme-ios .tile, 
+        body.theme-ios .download-btn, 
+        body.theme-ios .nav-tab,
+        body.theme-ios .menu-item,
+        body.theme-ios .modal-content {
+            backdrop-filter: blur(var(--blur));
+            background: var(--glass);
+            border: 1px solid var(--border);
+        }
+
+        /* БОКОВОЕ МЕНЮ */
         #sidebar {
-            position: fixed; right: -300px; top: 0; width: 280px; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px);
-            z-index: 10000; transition: 0.4s; padding: 40px 20px;
+            position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
+            background: rgba(15, 12, 41, 0.95); backdrop-filter: blur(25px);
+            z-index: 10000; transition: 0.4s; border-right: 1px solid var(--border);
+            padding: 30px 20px; display: flex; flex-direction: column; gap: 15px;
         }
-        #sidebar.open { right: 0; }
+        #sidebar.open { left: 0; }
 
-        .menu-item {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: rgba(255,255,255,0.05); border-radius: 10px;
-            color: #fff; text-decoration: none; margin-bottom: 10px; border: 1px solid transparent;
-        }
+        .theme-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+        .theme-btn { flex: 1; padding: 10px; font-size: 11px; border-radius: 10px; background: var(--glass); border: 1px solid var(--border); color: #fff; }
+        .theme-btn.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 10px var(--accent); }
 
-        /* ИКОНКИ КНОПОК PSP */
-        .psp-symbol {
-            width: 20px; height: 20px; border: 2px solid #fff; border-radius: 50%;
-            display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
-        }
+        /* ОКНО ВЫБОРА */
+        #download-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 20000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        .modal-content { background: rgba(26, 26, 46, 0.8); width: 90%; max-width: 350px; padding: 25px; border-radius: var(--radius); border: 1px solid var(--border); text-align: center; }
+        .modal-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: var(--glass); border: 1px solid var(--border); color: #fff; text-decoration: none; border-radius: 12px; font-weight: 700; }
 
-        /* ЭКРАН ЭМУЛЯТОРОВ */
-        #emu-screen {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            display: none; padding: 60px; z-index: 20000;
-        }
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; z-index: 9999; }
 
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; z-index: 9998; }
+        .profile-section { text-align: center; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .avatar-wrapper { width: 70px; height: 70px; margin: 0 auto 10px; }
+        #user-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+        #user-name { font-size: 16px; font-weight: 700; background: none; border: none; color: #fff; text-align: center; width: 100%; outline: none; }
+
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 10px 15px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #fff; text-decoration: none; font-size: 13px; }
+        .menu-icon { width: 25px; height: 25px; border-radius: 50%; }
+
+        /* ГЕЙМПАД-ИНТЕРФЕЙС */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+        .nav-tab { background: var(--glass); padding: 5px 15px; border-radius: 12px; border: 1px solid var(--border); font-size: 13px; }
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px; gap: 15px; overflow: hidden; }
+        .games-list { display: flex; align-items: center; gap: 12px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
+        .games-list::-webkit-scrollbar { display: none; }
+        
+        .tile { width: 110px; height: 150px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; flex-shrink: 0; opacity: 0.6; }
+        .tile.active { width: 140px; height: 190px; opacity: 1; }
+        .tile img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info { display: flex; flex-direction: column; gap: 8px; }
+        .download-btn { display: inline-block; background: #fff; color: #000; text-align: center; padding: 14px 0; width: 180px; border-radius: 12px; text-decoration: none; font-weight: 700; }
+
+        /* ПОДПИСКА */
+        #subscription-screen { position: fixed; inset: 0; background: var(--bg-dark); z-index: 99999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(20px); }
+        .sub-modal { background: #1a1a2e; width: 90%; max-width: 380px; padding: 30px; border-radius: 25px; text-align: center; position: relative; border: 1px solid var(--border); }
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 30px; display: none; cursor: pointer; }
+        .tg-link { display: block; background: var(--accent); color: #fff; padding: 15px; border-radius: 15px; text-decoration: none; font-weight: 700; margin-top: 20px; }
     </style>
 </head>
 <body class="theme-standard">
 
-    <div class="xmb-nav">
-        <div class="nav-item" onclick="toggleMenu()" id="nav-profile">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span style="font-size: 10px;" id="txt-nav-me">МОЕ</span>
-        </div>
-        <div class="nav-item active" onclick="location.reload()">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            <span style="font-size: 10px;" id="txt-nav-games">ИГРЫ</span>
-        </div>
-        <div class="nav-item" onclick="toggleEmu(true)">
-            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-            <span style="font-size: 10px;" id="txt-nav-emu">ЭМУЛЯТОРЫ</span>
-        </div>
-    </div>
-
-    <div class="content-area">
-        <div class="games-list" id="g-list">
-            </div>
-
-        <div class="info-box">
-            <h1 class="game-title" id="t">GTA 5</h1>
-            <p class="game-desc" id="d">Loading...</p>
-            <div class="psp-btn" onclick="handleDownload()">
-                <span class="psp-symbol" style="border-color: #3ae2ff; color: #3ae2ff;">X</span>
-                <span id="txt-enter">ENTER</span>
-            </div>
-        </div>
+    <div id="download-modal" onclick="closeDownloadModal(event)">
+        <div class="modal-content" id="modal-content-area"></div>
     </div>
 
     <div id="overlay" onclick="toggleMenu()"></div>
     <div id="sidebar">
-        <div style="text-align:center; margin-bottom: 30px;">
-            <img id="user-avatar" src="https://via.placeholder.com/80" style="width:80px; height:80px; border-radius:50%; border:3px solid #fff;">
-            <h3 id="display-name" style="margin-top:10px;">User</h3>
+        <div class="profile-section">
+            <div class="avatar-wrapper" onclick="document.getElementById('avatar-input').click()">
+                <img id="user-avatar" src="https://via.placeholder.com/80">
+            </div>
+            <input type="file" id="avatar-input" hidden accept="image/*" onchange="changeAvatar(this)">
+            <input type="text" id="user-name" value="Moe User" onchange="saveName(this.value)">
         </div>
 
-        <p style="font-size:10px; color:#aaa; margin-bottom:10px;">LANGUAGE / ЯЗЫК</p>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <button class="psp-btn" onclick="setLang('ru')" style="flex:1; justify-content:center;">RU</button>
-            <button class="psp-btn" onclick="setLang('en')" style="flex:1; justify-content:center;">EN</button>
+        <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Тема оформления:</p>
+        <div class="theme-selector">
+            <button class="theme-btn active" id="btn-std" onclick="setTheme('standard')">Стандарт</button>
+            <button class="theme-btn" id="btn-ios" onclick="setTheme('ios')">iOS 26</button>
         </div>
 
-        <a href="https://t.me/GameHubHelio99" class="menu-item"><img src="https://files.catbox.moe/5f89fn.jpg" style="width:20px; border-radius:4px;"> Telegram</a>
-        <a href="https://t.me/AmericanPsho" class="menu-item"><img src="https://files.catbox.moe/o4nod3.jpg" style="width:20px; border-radius:4px;"> Developer</a>
-        
-        <div class="psp-btn" onclick="toggleMenu()" style="width:100%; justify-content:center; margin-top: auto;">
-            <span class="psp-symbol" style="border-color: #ff3a3a; color: #ff3a3a;">O</span> BACK
+        <a href="https://t.me/GameHubHelio99" target="_blank" class="menu-item">
+            <img src="https://files.catbox.moe/5f89fn.jpg" class="menu-icon"> Telegram
+        </a>
+        <a href="https://t.me/AmericanPsho" target="_blank" class="menu-item">
+            <img src="https://files.catbox.moe/o4nod3.jpg" class="menu-icon"> Developer
+        </a>
+        <div class="menu-item" onclick="toggleMenu()" style="margin-top: auto; opacity: 0.6;"><span>⬅️</span> Назад</div>
+    </div>
+
+    <div id="subscription-screen">
+        <div class="sub-modal">
+            <span class="close-x" id="closeBtn" onclick="hideSubscription()">×</span>
+            <h2>Привет!</h2>
+            <p style="margin: 15px 0;">Подпишись на наш Telegram!</p>
+            <a href="https://t.me/GameHubHelio99" target="_blank" class="tg-link" onclick="startTimer()">Подписаться</a>
+            <div id="timer-text" style="margin-top:15px; font-size:12px; color: #777;"></div>
         </div>
     </div>
 
-    <div id="emu-screen">
-        <h1 id="txt-emu-h">ЭМУЛЯТОРЫ</h1>
-        <div style="margin-top:40px; opacity:0.5">No emulators found.</div>
-        <div class="psp-btn" onclick="toggleEmu(false)" style="margin-top:30px;">BACK</div>
+    <div class="header">
+        <div class="nav-tab" onclick="toggleMenu()">LB <b id="display-name">Moe</b> RB</div>
+        <div id="status-bar" style="font-size: 13px;">Online 🔋</div>
+    </div>
+
+    <div class="container">
+        <div class="games-list">
+            <div class="tile active" onclick="update('gta5', this)"><img src="https://files.catbox.moe/munwwt.jpeg"></div>
+            <div class="tile" onclick="update('sleeping', this)"><img src="https://files.catbox.moe/asugs7.jpeg"></div>
+            <div class="tile" onclick="update('gta4', this)"><img src="https://files.catbox.moe/sufdhc.webp"></div>
+            <div class="tile" onclick="update('stray', this)"><img src="https://files.catbox.moe/3aw2tm.jpeg"></div>
+            <div class="tile" onclick="update('raven', this)"><img src="https://files.catbox.moe/g2zfv4.jpeg"></div>
+            <div class="tile" onclick="update('hitman', this)"><img src="https://files.catbox.moe/6f6e7p.jpg"></div>
+            <div class="tile" onclick="update('ac2', this)"><img src="https://files.catbox.moe/d3fssi.jpg"></div>
+            <div class="tile" onclick="update('brick', this)"><img src="https://files.catbox.moe/jsjxaw.jpeg"></div>
+        </div>
+        <div class="info">
+            <h1 id="t">GTA 5</h1>
+            <p id="d" style="font-size: 13px; color: #ccc; height: 40px;">Загрузите легендарную GTA 5 в разных версиях.</p>
+            <div id="l" class="download-btn" onclick="handleDownload()">СКАЧАТЬ</div>
+        </div>
     </div>
 
     <script>
-        const games = [
-            { id: 'gta5', t: 'GTA 5', img: 'https://files.catbox.moe/munwwt.jpeg', ru: 'Лос-Сантос ждет тебя.', en: 'Los Santos is waiting for you.', l: 'https://gofile.io/d/8Gvabc' },
-            { id: 'gta4', t: 'GTA 4', img: 'https://files.catbox.moe/sufdhc.webp', ru: 'История Нико Беллика.', en: 'Niko Bellic\'s story.', l: 'https://buzzheavier.com/akft1ubwr2g1' },
-            { id: 'stray', t: 'Stray', img: 'https://files.catbox.moe/3aw2tm.jpeg', ru: 'Приключение кота.', en: 'A cat\'s adventure.', l: 'https://buzzheavier.com/l4qu35mx12ff' },
-            { id: 'ac2', t: 'Assassin\'s Creed 2', img: 'https://files.catbox.moe/d3fssi.jpg', ru: 'Эцио Аудиторе.', en: 'Ezio Auditore.', l: 'https://buzzheavier.com/7m35lpl1e1od' }
-        ];
+        let currentGame = 'gta5';
+        const gameData = {
+            gta5: {
+                t: "GTA 5", d: "Легендарный экшен в Лос-Сантосе. Выберите версию.", l: "MULTI",
+                versions: [
+                    {n: "10GB (Ultra Lite)", u: "https://gofile.io/d/8Gvabc"},
+                    {n: "12GB (Ultra Lite)", u: "https://buzzheavier.com/p5gy6hp2jiup"},
+                    {n: "47GB (Lite)", u: "https://gofile.io/d/QVTf2B"},
+                    {n: "24GB (Lite)", u: "https://gofile.io/d/pikHJm"},
+                    {n: "100GB (Full)", u: "https://buzzheavier.com/rkksxkwu6kef"}
+                ]
+            },
+            gta4: {
+                t: "GTA 4", d: "История Нико Беллика в Либерти-Сити.", l: "MULTI",
+                versions: [
+                    {n: "20GB (Full)", u: "https://buzzheavier.com/akft1ubwr2g1"},
+                    {n: "4GB (Lite)", u: "https://www.mediafire.com/file/nyahp4tmhb3i533"},
+                    {n: "7GB (Lite)", u: "https://www.mediafire.com/file/ssf0pnf6rk2of95"}
+                ]
+            },
+            sleeping: {t: "Sleeping Dogs", d: "Открытый мир и кунг-фу в Гонконге.", l: "https://buzzheavier.com/jgglyhqzkaqu"},
+            stray: {t: "Stray", d: "Приключение кота в мире роботов.", l: "https://buzzheavier.com/l4qu35mx12ff"},
+            raven: {t: "Ravenfield", d: "Шутер с ботами и разрушаемостью.", l: "https://megadb.net/kw2j7hdqenvy"},
+            hitman: {t: "Hitman Absolution", d: "Стелс про Агента 47.", l: "https://datanodes.to/6duxewjc91or/Hitman-Absolution.rar"},
+            ac2: {t: "Assassin's Creed 2", d: "Ассасины в Италии.", l: "https://buzzheavier.com/7m35lpl1e1od"},
+            brick: {t: "Brick Rigs", d: "Стройте технику из кирпичиков.", l: "https://gofile.io/d/tGx53U"}
+        };
 
-        let currentLang = localStorage.getItem('user_lang') || 'ru';
-        let currentIndex = 0;
-
-        function initGames() {
-            const list = document.getElementById('g-list');
-            list.innerHTML = '';
-            games.forEach((g, i) => {
-                const div = document.createElement('div');
-                div.className = `tile ${i === 0 ? 'active' : ''}`;
-                div.innerHTML = `<img src="${g.img}">`;
-                div.onclick = () => selectGame(i);
-                list.appendChild(div);
-            });
-            updateInfo();
+        function setTheme(theme) {
+            document.body.className = 'theme-' + theme;
+            document.getElementById('btn-std').classList.toggle('active', theme === 'standard');
+            document.getElementById('btn-ios').classList.toggle('active', theme === 'ios');
+            localStorage.setItem('user_theme', theme);
         }
 
-        function selectGame(index) {
-            currentIndex = index;
-            document.querySelectorAll('.tile').forEach((t, i) => {
-                t.classList.toggle('active', i === index);
-            });
-            updateInfo();
+        function update(key, el) {
+            currentGame = key;
+            document.querySelectorAll('.tile').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('t').innerText = gameData[key].t;
+            document.getElementById('d').innerText = gameData[key].d;
+            el.scrollIntoView({ behavior: 'smooth', inline: 'center' });
         }
 
-        function updateInfo() {
-            const g = games[currentIndex];
-            document.getElementById('t').innerText = g.t;
-            document.getElementById('d').innerText = g[currentLang];
+        function handleDownload() {
+            const game = gameData[currentGame];
+            if (game.l === "MULTI") {
+                const area = document.getElementById('modal-content-area');
+                area.innerHTML = `<h3>Выбор версии</h3>`;
+                game.versions.forEach(v => area.innerHTML += `<a href="${v.u}" class="modal-btn" target="_blank">${v.n}</a>`);
+                area.innerHTML += `<p style="margin-top:15px; cursor:pointer;" onclick="closeDownloadModal(null)">Закрыть</p>`;
+                document.getElementById('download-modal').style.display = 'flex';
+            } else { window.open(game.l, '_blank'); }
         }
 
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('user_lang', lang);
-            document.getElementById('txt-nav-me').innerText = lang === 'ru' ? 'МОЕ' : 'MY';
-            document.getElementById('txt-nav-games').innerText = lang === 'ru' ? 'ИГРЫ' : 'GAMES';
-            document.getElementById('txt-nav-emu').innerText = lang === 'ru' ? 'ЭМУЛЯТОРЫ' : 'EMU';
-            document.getElementById('txt-enter').innerText = lang === 'ru' ? 'ВХОД' : 'ENTER';
-            updateInfo();
+        function closeDownloadModal(e) {
+            if (!e || e.target.id === 'download-modal') document.getElementById('download-modal').style.display = 'none';
         }
 
         function toggleMenu() {
             const sb = document.getElementById('sidebar');
-            const open = sb.classList.toggle('open');
-            document.getElementById('overlay').style.display = open ? 'block' : 'none';
+            document.getElementById('overlay').style.display = sb.classList.toggle('open') ? 'block' : 'none';
         }
 
-        function toggleEmu(show) { document.getElementById('emu-screen').style.display = show ? 'block' : 'none'; }
-        function handleDownload() { window.open(games[currentIndex].l, '_blank'); }
+        function changeAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('user-avatar').src = e.target.result;
+                    localStorage.setItem('user_ava', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
-        window.onload = () => {
-            initGames();
-            setLang(currentLang);
+        function saveName(val) {
+            localStorage.setItem('user_name', val);
+            document.getElementById('display-name').innerText = val;
+        }
+
+        window.addEventListener('load', () => {
             const name = localStorage.getItem('user_name');
-            if (name) document.getElementById('display-name').innerText = name;
             const ava = localStorage.getItem('user_ava');
+            const theme = localStorage.getItem('user_theme') || 'standard';
+            if (name) { document.getElementById('user-name').value = name; document.getElementById('display-name').innerText = name; }
             if (ava) document.getElementById('user-avatar').src = ava;
-        };
+            setTheme(theme);
+            if (!localStorage.getItem('sub_hidden')) document.getElementById('subscription-screen').style.display = 'flex';
+        });
+
+        let timerStarted = false;
+        function startTimer() {
+            if (timerStarted) return;
+            timerStarted = true;
+            let sec = 8;
+            const inv = setInterval(() => {
+                document.getElementById('timer-text').innerText = "Крестик появится через " + sec + "...";
+                if (sec-- <= 0) { clearInterval(inv); document.getElementById('closeBtn').style.display = 'block'; }
+            }, 1000);
+        }
+
+        function hideSubscription() {
+            localStorage.setItem('sub_hidden', 'true');
+            document.getElementById('subscription-screen').style.display = 'none';
+        }
     </script>
 </body>
 </html>
